@@ -1,0 +1,2180 @@
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	initializeCapSenseBaseline
+  20              		.data
+  21              		.type	initializeCapSenseBaseline, %object
+  22              		.size	initializeCapSenseBaseline, 1
+  23              	initializeCapSenseBaseline:
+  24 0000 01       		.byte	1
+  25              		.section	.text.setupFreeRTOS,"ax",%progbits
+  26              		.align	2
+  27              		.global	setupFreeRTOS
+  28              		.code	16
+  29              		.thumb_func
+  30              		.type	setupFreeRTOS, %function
+  31              	setupFreeRTOS:
+  32              	.LFB35:
+  33              		.file 1 "main.c"
+   1:main.c        **** /******************************************************************************
+   2:main.c        **** * Project Name		: PSoC_4_BLE_CapSense_Proximity
+   3:main.c        **** * File Name			: main.c
+   4:main.c        **** * Version 			: 1.0
+   5:main.c        **** * Device Used		: CY8C4247LQI-BL583
+   6:main.c        **** * Software Used		: PSoC Creator 4.2
+   7:main.c        **** * Compiler    		: ARM GCC 4.8.4, ARM RVDS Generic, ARM MDK Generic
+   8:main.c        **** * Related Hardware	: CY8CKIT-042-BLE-A Bluetooth Low Energy Pioneer Kit 
+   9:main.c        **** * Owner				: ROIT
+  10:main.c        **** *
+  11:main.c        **** ********************************************************************************
+  12:main.c        **** * Copyright (2014), Cypress Semiconductor Corporation. All Rights Reserved.
+  13:main.c        **** ********************************************************************************
+  14:main.c        **** * This software is owned by Cypress Semiconductor Corporation (Cypress)
+  15:main.c        **** * and is protected by and subject to worldwide patent protection (United
+  16:main.c        **** * States and foreign), United States copyright laws and international treaty
+  17:main.c        **** * provisions. Cypress hereby grants to licensee a personal, non-exclusive,
+  18:main.c        **** * non-transferable license to copy, use, modify, create derivative works of,
+  19:main.c        **** * and compile the Cypress Source Code and derivative works for the sole
+  20:main.c        **** * purpose of creating custom software in support of licensee product to be
+  21:main.c        **** * used only in conjunction with a Cypress integrated circuit as specified in
+  22:main.c        **** * the applicable agreement. Any reproduction, modification, translation,
+  23:main.c        **** * compilation, or representation of this software except as specified above 
+  24:main.c        **** * is prohibited without the express written permission of Cypress.
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 2
+
+
+  25:main.c        **** *
+  26:main.c        **** * Disclaimer: CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH 
+  27:main.c        **** * REGARD TO THIS MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+  28:main.c        **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  29:main.c        **** * Cypress reserves the right to make changes without further notice to the 
+  30:main.c        **** * materials described herein. Cypress does not assume any liability arising out 
+  31:main.c        **** * of the application or use of any product or circuit described herein. Cypress 
+  32:main.c        **** * does not authorize its products for use as critical components in life-support 
+  33:main.c        **** * systems where a malfunction or failure may reasonably be expected to result in 
+  34:main.c        **** * significant injury to the user. The inclusion of Cypress' product in a life-
+  35:main.c        **** * support systems application implies that the manufacturer assumes all risk of 
+  36:main.c        **** * such use and in doing so indemnifies Cypress against all charges. 
+  37:main.c        **** *
+  38:main.c        **** * Use of this Software may be limited by and subject to the applicable Cypress
+  39:main.c        **** * software license agreement. 
+  40:main.c        **** *******************************************************************************/
+  41:main.c        **** 
+  42:main.c        **** /******************************************************************************
+  43:main.c        **** *                           THEORY OF OPERATION
+  44:main.c        **** *******************************************************************************
+  45:main.c        **** * The project will show case the capability of PSoC 4 BLE to communicate with
+  46:main.c        **** * a BLE Central device. The data communicated is the CapSense proximity value,
+  47:main.c        **** * sent from PSoC 4 BLE over a custom service. This custom service allows
+  48:main.c        **** * notifications to be sent to central device after notifications are enabled.
+  49:main.c        **** * This project utilizes CapSense component to detect the change in capacitance
+  50:main.c        **** * of the proximity sensor and report this to central device over BLE.
+  51:main.c        **** * The BLE central device can be either BLE capable smartphone with associated 
+  52:main.c        **** * mobile application or CySmart PC tool.
+  53:main.c        **** * This project also inludes low power mode operation, idle for battery operated 
+  54:main.c        **** * devices. The project utlizes Deep Sleep feature of both BLESS and CPU to remain 
+  55:main.c        **** * in low power mode as much as possible, while maintaining the BLE connection and  
+  56:main.c        **** * data transfer. This allows the device to run on coin cell battery for long time.
+  57:main.c        **** *
+  58:main.c        **** * Note:
+  59:main.c        **** * The programming pins have been configured as GPIO, and not SWD. This is because 
+  60:main.c        **** * when programming pins are configured for SWD, then the silicon consumes extra
+  61:main.c        **** * power through the pins. To prevent the leakage of power, the pins have been set 
+  62:main.c        **** * to GPIO. With this setting, the kit can still be acquired by PSoC Creator or
+  63:main.c        **** * PSoC Programmer software tools for programming, but the project cannot be 
+  64:main.c        **** * externally debugged. To re-enable debugging, go to PSoC_4_BLE_CapSense.cydwr from
+  65:main.c        **** * Workspace Explorer, go to Systems tab, and set the Debug Select option to 'SWD'.
+  66:main.c        **** * Build and program this project to enable external Debugging.
+  67:main.c        **** *
+  68:main.c        **** * Refer to BLE Pioneer Kit user guide for details.
+  69:main.c        **** *******************************************************************************
+  70:main.c        **** * Hardware connection required for testing -
+  71:main.c        **** * PROX pin 		- P2[0] (requires an external wire-loop connection to PROX sensor)
+  72:main.c        **** * Cmod pin		- P4[0] (hard-wired in the PSoC 4 BLE Module)
+  73:main.c        **** * User Button	- P2[7] (hard-wired on BLE Pioneer Kit)
+  74:main.c        **** * Status LED	- P3[7] (hard-wired on BLE Pioneer Kit)
+  75:main.c        **** ******************************************************************************/
+  76:main.c        **** #include <main.h>
+  77:main.c        **** #include <FreeRTOS.h>
+  78:main.c        **** /*'deviceConnected' flag is used by application to know whether a Central device  
+  79:main.c        **** * has been connected. This is updated in BLE event callback */
+  80:main.c        **** extern uint8 deviceConnected;
+  81:main.c        **** 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 3
+
+
+  82:main.c        **** /*'startNotification' flag is set when the central device writes to CCC (Client  
+  83:main.c        **** * Characteristic Configuration) of the CapSense proximity characteristic to 
+  84:main.c        **** * enable notifications */
+  85:main.c        **** extern uint8 startNotification;	
+  86:main.c        **** 
+  87:main.c        **** /* 'restartAdvertisement' flag is used to restart advertisement */
+  88:main.c        **** extern uint8 restartAdvertisement;
+  89:main.c        **** 
+  90:main.c        **** /* 'initializeCapSenseBaseline' flag is used to call the function once that initializes 
+  91:main.c        **** * all CapSense baseline. The baseline is initialized when the first advertisement 
+  92:main.c        **** * is started. This is done so that any external disturbance while powering the kit does 
+  93:main.c        **** * not infliuence the baseline value, that may cause wrong readings. */
+  94:main.c        **** uint8 initializeCapSenseBaseline = TRUE;
+  95:main.c        **** 
+  96:main.c        **** /*FreeRTOS Functions*/
+  97:main.c        **** extern void xPortPendSVHandler(void);
+  98:main.c        **** extern void xPortSysTickHandler(void);
+  99:main.c        **** extern void vPortSVCHandler(void);
+ 100:main.c        **** #define CORTEX_INTERRUPT_BASE          (16)
+ 101:main.c        **** void setupFreeRTOS()
+ 102:main.c        **** {
+  34              		.loc 1 102 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38 0000 80B5     		push	{r7, lr}
+  39              		.cfi_def_cfa_offset 8
+  40              		.cfi_offset 7, -8
+  41              		.cfi_offset 14, -4
+  42 0002 00AF     		add	r7, sp, #0
+  43              		.cfi_def_cfa_register 7
+ 103:main.c        ****     /* Handler for Cortex Supervisor Call (SVC, formerly SWI) - address 11 */
+ 104:main.c        ****     CyIntSetSysVector(CORTEX_INTERRUPT_BASE + SVCall_IRQn,(cyisraddress)vPortSVCHandler );
+  44              		.loc 1 104 0
+  45 0004 084B     		ldr	r3, .L2
+  46 0006 1900     		movs	r1, r3
+  47 0008 0B20     		movs	r0, #11
+  48 000a FFF7FEFF 		bl	CyIntSetSysVector
+ 105:main.c        ****  
+ 106:main.c        ****     /* Handler for Cortex PendSV Call - address 14 */
+ 107:main.c        **** 	CyIntSetSysVector(CORTEX_INTERRUPT_BASE + PendSV_IRQn,(cyisraddress)xPortPendSVHandler );    
+  49              		.loc 1 107 0
+  50 000e 074B     		ldr	r3, .L2+4
+  51 0010 1900     		movs	r1, r3
+  52 0012 0E20     		movs	r0, #14
+  53 0014 FFF7FEFF 		bl	CyIntSetSysVector
+ 108:main.c        ****  
+ 109:main.c        ****     /* Handler for Cortex SYSTICK - address 15 */
+ 110:main.c        **** 	CyIntSetSysVector(CORTEX_INTERRUPT_BASE + SysTick_IRQn,(cyisraddress)xPortSysTickHandler );
+  54              		.loc 1 110 0
+  55 0018 054B     		ldr	r3, .L2+8
+  56 001a 1900     		movs	r1, r3
+  57 001c 0F20     		movs	r0, #15
+  58 001e FFF7FEFF 		bl	CyIntSetSysVector
+ 111:main.c        **** }
+  59              		.loc 1 111 0
+  60 0022 C046     		nop
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 4
+
+
+  61 0024 BD46     		mov	sp, r7
+  62              		@ sp needed
+  63 0026 80BD     		pop	{r7, pc}
+  64              	.L3:
+  65              		.align	2
+  66              	.L2:
+  67 0028 00000000 		.word	vPortSVCHandler
+  68 002c 00000000 		.word	xPortPendSVHandler
+  69 0030 00000000 		.word	xPortSysTickHandler
+  70              		.cfi_endproc
+  71              	.LFE35:
+  72              		.size	setupFreeRTOS, .-setupFreeRTOS
+  73              		.section	.rodata
+  74              		.align	2
+  75              	.LC3:
+  76 0000 50726F78 		.ascii	"Proximity Sensor\000"
+  76      696D6974 
+  76      79205365 
+  76      6E736F72 
+  76      00
+  77              		.section	.text.main,"ax",%progbits
+  78              		.align	2
+  79              		.global	main
+  80              		.code	16
+  81              		.thumb_func
+  82              		.type	main, %function
+  83              	main:
+  84              	.LFB36:
+ 112:main.c        **** 
+ 113:main.c        **** /*******************************************************************************
+ 114:main.c        **** * Function Name: main
+ 115:main.c        **** ********************************************************************************
+ 116:main.c        **** * Summary:
+ 117:main.c        **** *        System entrance point. This calls the BLE routine functions as well as
+ 118:main.c        **** * function for handling CapSense Proximity changes
+ 119:main.c        **** *
+ 120:main.c        **** * Parameters:
+ 121:main.c        **** *  void
+ 122:main.c        **** *
+ 123:main.c        **** * Return:
+ 124:main.c        **** *  int
+ 125:main.c        **** *
+ 126:main.c        **** 
+ 127:main.c        **** *******************************************************************************/
+ 128:main.c        **** int main()
+ 129:main.c        **** {
+  85              		.loc 1 129 0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 1, uses_anonymous_args = 0
+  89 0000 80B5     		push	{r7, lr}
+  90              		.cfi_def_cfa_offset 8
+  91              		.cfi_offset 7, -8
+  92              		.cfi_offset 14, -4
+  93 0002 82B0     		sub	sp, sp, #8
+  94              		.cfi_def_cfa_offset 16
+  95 0004 02AF     		add	r7, sp, #8
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 5
+
+
+  96              		.cfi_def_cfa 7, 8
+ 130:main.c        ****     /* This function will initialize the system resources such as BLE and CapSense */
+ 131:main.c        **** 	InitializeSystem();
+  97              		.loc 1 131 0
+  98 0006 FFF7FEFF 		bl	InitializeSystem
+ 132:main.c        **** 	
+ 133:main.c        **** 	setupFreeRTOS();
+  99              		.loc 1 133 0
+ 100 000a FFF7FEFF 		bl	setupFreeRTOS
+ 134:main.c        **** 	
+ 135:main.c        ****     xTaskCreate("Proximity Sensor",200,0,1,0);
+ 101              		.loc 1 135 0
+ 102 000e 0748     		ldr	r0, .L6
+ 103 0010 0023     		movs	r3, #0
+ 104 0012 0093     		str	r3, [sp]
+ 105 0014 0123     		movs	r3, #1
+ 106 0016 0022     		movs	r2, #0
+ 107 0018 C821     		movs	r1, #200
+ 108 001a FFF7FEFF 		bl	xTaskCreate
+ 136:main.c        **** 	
+ 137:main.c        **** 	vTaskStartScheduler();
+ 109              		.loc 1 137 0
+ 110 001e FFF7FEFF 		bl	vTaskStartScheduler
+ 111 0022 0023     		movs	r3, #0
+ 138:main.c        **** }
+ 112              		.loc 1 138 0
+ 113 0024 1800     		movs	r0, r3
+ 114 0026 BD46     		mov	sp, r7
+ 115              		@ sp needed
+ 116 0028 80BD     		pop	{r7, pc}
+ 117              	.L7:
+ 118 002a C046     		.align	2
+ 119              	.L6:
+ 120 002c 00000000 		.word	.LC3
+ 121              		.cfi_endproc
+ 122              	.LFE36:
+ 123              		.size	main, .-main
+ 124              		.section	.text.InitializeSystem,"ax",%progbits
+ 125              		.align	2
+ 126              		.global	InitializeSystem
+ 127              		.code	16
+ 128              		.thumb_func
+ 129              		.type	InitializeSystem, %function
+ 130              	InitializeSystem:
+ 131              	.LFB37:
+ 139:main.c        **** 
+ 140:main.c        **** /*******************************************************************************
+ 141:main.c        **** * Function Name: InitializeSystem
+ 142:main.c        **** ********************************************************************************
+ 143:main.c        **** * Summary:
+ 144:main.c        **** *        Starts the components and initializes CapSense baselines
+ 145:main.c        **** *
+ 146:main.c        **** * Parameters:
+ 147:main.c        **** *  void
+ 148:main.c        **** *
+ 149:main.c        **** * Return:
+ 150:main.c        **** *  void
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 6
+
+
+ 151:main.c        **** *
+ 152:main.c        **** 
+ 153:main.c        **** *******************************************************************************/
+ 154:main.c        **** void InitializeSystem(void)
+ 155:main.c        **** {
+ 132              		.loc 1 155 0
+ 133              		.cfi_startproc
+ 134              		@ args = 0, pretend = 0, frame = 0
+ 135              		@ frame_needed = 1, uses_anonymous_args = 0
+ 136 0000 80B5     		push	{r7, lr}
+ 137              		.cfi_def_cfa_offset 8
+ 138              		.cfi_offset 7, -8
+ 139              		.cfi_offset 14, -4
+ 140 0002 00AF     		add	r7, sp, #0
+ 141              		.cfi_def_cfa_register 7
+ 156:main.c        **** 	/* Enable global interrupt mask */
+ 157:main.c        **** 	CyGlobalIntEnable;
+ 142              		.loc 1 157 0
+ 143              		.syntax divided
+ 144              	@ 157 "main.c" 1
+ 145 0004 62B6     		CPSIE   i
+ 146              	@ 0 "" 2
+ 158:main.c        **** 
+ 159:main.c        **** 	/* Start BLE component and register the CustomEventHandler function. This 
+ 160:main.c        **** 	* function exposes the events from BLE component for application use */
+ 161:main.c        **** 	CyBle_Start(CustomEventHandler);					
+ 147              		.loc 1 161 0
+ 148              		.thumb
+ 149              		.syntax unified
+ 150 0006 074B     		ldr	r3, .L9
+ 151 0008 1800     		movs	r0, r3
+ 152 000a FFF7FEFF 		bl	CyBle_Start
+ 162:main.c        **** 	
+ 163:main.c        **** 	/* Set drive mode of the status LED pin to Strong*/
+ 164:main.c        **** 	Status_LED_SetDriveMode(Status_LED_DM_STRONG);	
+ 153              		.loc 1 164 0
+ 154 000e 0620     		movs	r0, #6
+ 155 0010 FFF7FEFF 		bl	Status_LED_SetDriveMode
+ 165:main.c        **** 	
+ 166:main.c        **** 	#ifdef CAPSENSE_ENABLED
+ 167:main.c        **** 	/* Enable the proximity widget explicitly and start CapSense component. 
+ 168:main.c        **** 	* Initialization of the baseline is done when the first connection 
+ 169:main.c        **** 	* happens  */
+ 170:main.c        **** 	CapSense_EnableWidget(CapSense_PROXIMITYSENSOR0__PROX);
+ 156              		.loc 1 170 0
+ 157 0014 0020     		movs	r0, #0
+ 158 0016 FFF7FEFF 		bl	CapSense_EnableWidget
+ 171:main.c        **** 	CapSense_Start();
+ 159              		.loc 1 171 0
+ 160 001a FFF7FEFF 		bl	CapSense_Start
+ 172:main.c        **** 	#endif
+ 173:main.c        **** 		
+ 174:main.c        **** }
+ 161              		.loc 1 174 0
+ 162 001e C046     		nop
+ 163 0020 BD46     		mov	sp, r7
+ 164              		@ sp needed
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 7
+
+
+ 165 0022 80BD     		pop	{r7, pc}
+ 166              	.L10:
+ 167              		.align	2
+ 168              	.L9:
+ 169 0024 00000000 		.word	CustomEventHandler
+ 170              		.cfi_endproc
+ 171              	.LFE37:
+ 172              		.size	InitializeSystem, .-InitializeSystem
+ 173              		.section	.text.HandleCapSenseProximity,"ax",%progbits
+ 174              		.align	2
+ 175              		.global	HandleCapSenseProximity
+ 176              		.code	16
+ 177              		.thumb_func
+ 178              		.type	HandleCapSenseProximity, %function
+ 179              	HandleCapSenseProximity:
+ 180              	.LFB38:
+ 175:main.c        **** 
+ 176:main.c        **** /*******************************************************************************
+ 177:main.c        **** * Function Name: HandleCapSenseProximity
+ 178:main.c        **** ********************************************************************************
+ 179:main.c        **** * Summary:
+ 180:main.c        **** *       Read the proximity data from the sensor and update the BLE
+ 181:main.c        **** *		custom notification value.
+ 182:main.c        **** *
+ 183:main.c        **** * Parameters:
+ 184:main.c        **** *  void
+ 185:main.c        **** *
+ 186:main.c        **** * Return:
+ 187:main.c        **** *  void
+ 188:main.c        **** *
+ 189:main.c        **** *******************************************************************************/
+ 190:main.c        **** void HandleCapSenseProximity(void)
+ 191:main.c        **** {
+ 181              		.loc 1 191 0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 8
+ 184              		@ frame_needed = 1, uses_anonymous_args = 0
+ 185 0000 90B5     		push	{r4, r7, lr}
+ 186              		.cfi_def_cfa_offset 12
+ 187              		.cfi_offset 4, -12
+ 188              		.cfi_offset 7, -8
+ 189              		.cfi_offset 14, -4
+ 190 0002 83B0     		sub	sp, sp, #12
+ 191              		.cfi_def_cfa_offset 24
+ 192 0004 00AF     		add	r7, sp, #0
+ 193              		.cfi_def_cfa_register 7
+ 192:main.c        **** 	#ifdef CAPSENSE_ENABLED
+ 193:main.c        **** 	/* Static variable used as counter for reading the new proximity value */
+ 194:main.c        **** 	static uint16 proxCounter = TRUE;			
+ 195:main.c        **** 				
+ 196:main.c        **** 	/* 'proximityValue' stores the proximity value read from CapSense component */
+ 197:main.c        **** 	uint8 proximityValue;	
+ 198:main.c        **** 		
+ 199:main.c        **** 	/* Check if proxCounter has reached its counting value */
+ 200:main.c        **** 	if(FALSE == (--proxCounter))			
+ 194              		.loc 1 200 0
+ 195 0006 134B     		ldr	r3, .L15
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 8
+
+
+ 196 0008 1B88     		ldrh	r3, [r3]
+ 197 000a 013B     		subs	r3, r3, #1
+ 198 000c 9AB2     		uxth	r2, r3
+ 199 000e 114B     		ldr	r3, .L15
+ 200 0010 1A80     		strh	r2, [r3]
+ 201 0012 104B     		ldr	r3, .L15
+ 202 0014 1B88     		ldrh	r3, [r3]
+ 203 0016 002B     		cmp	r3, #0
+ 204 0018 17D1     		bne	.L14
+ 201:main.c        **** 	{
+ 202:main.c        **** 		/* Set 'proxCounter' to the PROX_COUNTER_VALUE. This counter prevents sending 
+ 203:main.c        **** 		   of large number of CapSense proximity data to BLE Central device */
+ 204:main.c        **** 		proxCounter = PROX_COUNTER_VALUE;
+ 205              		.loc 1 204 0
+ 206 001a 0E4B     		ldr	r3, .L15
+ 207 001c 0522     		movs	r2, #5
+ 208 001e 1A80     		strh	r2, [r3]
+ 205:main.c        **** 
+ 206:main.c        **** 		/* Scan the Proximity Widget */
+ 207:main.c        **** 		CapSense_ScanWidget(CapSense_PROXIMITYSENSOR0__PROX);				
+ 209              		.loc 1 207 0
+ 210 0020 0020     		movs	r0, #0
+ 211 0022 FFF7FEFF 		bl	CapSense_ScanWidget
+ 208:main.c        **** 		
+ 209:main.c        **** 		/* Wait for CapSense scanning to be complete. This could take about 5 ms */
+ 210:main.c        **** 		while(CapSense_IsBusy())
+ 212              		.loc 1 210 0
+ 213 0026 C046     		nop
+ 214              	.L13:
+ 215              		.loc 1 210 0 is_stmt 0 discriminator 1
+ 216 0028 FFF7FEFF 		bl	CapSense_IsBusy
+ 217 002c 031E     		subs	r3, r0, #0
+ 218 002e FBD1     		bne	.L13
+ 211:main.c        **** 		{
+ 212:main.c        **** 		}
+ 213:main.c        **** 		
+ 214:main.c        **** 		/* Update CapSense Baseline */
+ 215:main.c        **** 		CapSense_UpdateEnabledBaselines();			
+ 219              		.loc 1 215 0 is_stmt 1
+ 220 0030 FFF7FEFF 		bl	CapSense_UpdateEnabledBaselines
+ 216:main.c        **** 
+ 217:main.c        **** 		/* Get the Diffcount between proximity raw data and baseline */
+ 218:main.c        **** 		proximityValue = CapSense_GetDiffCountData(CapSense_PROXIMITYSENSOR0__PROX);
+ 221              		.loc 1 218 0
+ 222 0034 FC1D     		adds	r4, r7, #7
+ 223 0036 0020     		movs	r0, #0
+ 224 0038 FFF7FEFF 		bl	CapSense_GetDiffCountData
+ 225 003c 0300     		movs	r3, r0
+ 226 003e 2370     		strb	r3, [r4]
+ 219:main.c        **** 		
+ 220:main.c        **** 		/* Send the proximity data to BLE central device by notifications*/
+ 221:main.c        **** 		SendDataOverCapSenseNotification(proximityValue);
+ 227              		.loc 1 221 0
+ 228 0040 FB1D     		adds	r3, r7, #7
+ 229 0042 1B78     		ldrb	r3, [r3]
+ 230 0044 1800     		movs	r0, r3
+ 231 0046 FFF7FEFF 		bl	SendDataOverCapSenseNotification
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 9
+
+
+ 232              	.L14:
+ 222:main.c        **** 			
+ 223:main.c        **** 	}
+ 224:main.c        **** 	#endif
+ 225:main.c        **** }
+ 233              		.loc 1 225 0
+ 234 004a C046     		nop
+ 235 004c BD46     		mov	sp, r7
+ 236 004e 03B0     		add	sp, sp, #12
+ 237              		@ sp needed
+ 238 0050 90BD     		pop	{r4, r7, pc}
+ 239              	.L16:
+ 240 0052 C046     		.align	2
+ 241              	.L15:
+ 242 0054 02000000 		.word	proxCounter.7717
+ 243              		.cfi_endproc
+ 244              	.LFE38:
+ 245              		.size	HandleCapSenseProximity, .-HandleCapSenseProximity
+ 246              		.section	.text.Proximity_Task,"ax",%progbits
+ 247              		.align	2
+ 248              		.global	Proximity_Task
+ 249              		.code	16
+ 250              		.thumb_func
+ 251              		.type	Proximity_Task, %function
+ 252              	Proximity_Task:
+ 253              	.LFB39:
+ 226:main.c        **** 
+ 227:main.c        **** void Proximity_Task(void *arg)
+ 228:main.c        **** {
+ 254              		.loc 1 228 0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 8
+ 257              		@ frame_needed = 1, uses_anonymous_args = 0
+ 258 0000 80B5     		push	{r7, lr}
+ 259              		.cfi_def_cfa_offset 8
+ 260              		.cfi_offset 7, -8
+ 261              		.cfi_offset 14, -4
+ 262 0002 82B0     		sub	sp, sp, #8
+ 263              		.cfi_def_cfa_offset 16
+ 264 0004 00AF     		add	r7, sp, #0
+ 265              		.cfi_def_cfa_register 7
+ 266 0006 7860     		str	r0, [r7, #4]
+ 267              	.L21:
+ 229:main.c        ****     (void)arg;
+ 230:main.c        ****  
+ 231:main.c        **** 	for(;;)
+ 232:main.c        ****     {
+ 233:main.c        **** 		/*Process Event callback to handle BLE events. The events generated and 
+ 234:main.c        **** 		* used for this application are inside the 'CustomEventHandler' routine*/
+ 235:main.c        **** 		CyBle_ProcessEvents();
+ 268              		.loc 1 235 0
+ 269 0008 FFF7FEFF 		bl	CyBle_ProcessEvents
+ 236:main.c        **** 		
+ 237:main.c        **** 		/* Function to handle LED status depending on BLE state */
+ 238:main.c        **** 		HandleStatusLED();
+ 270              		.loc 1 238 0
+ 271 000c FFF7FEFF 		bl	HandleStatusLED
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 10
+
+
+ 239:main.c        **** 		
+ 240:main.c        **** 		/* Handle proximity data and CCCD value update only if BLE device is connected */
+ 241:main.c        **** 		if(TRUE == deviceConnected) 
+ 272              		.loc 1 241 0
+ 273 0010 104B     		ldr	r3, .L22
+ 274 0012 1B78     		ldrb	r3, [r3]
+ 275 0014 012B     		cmp	r3, #1
+ 276 0016 12D1     		bne	.L18
+ 242:main.c        **** 		{	
+ 243:main.c        **** 			/* When the Client Characteristic Configuration descriptor (CCCD) is written
+ 244:main.c        **** 			* by Central device for enabling/disabling notifications, then the same
+ 245:main.c        **** 			* descriptor value has to be explicitly updated in application so that
+ 246:main.c        **** 			* it reflects the correct value when the descriptor is read */
+ 247:main.c        **** 			UpdateNotificationCCCD();
+ 277              		.loc 1 247 0
+ 278 0018 FFF7FEFF 		bl	UpdateNotificationCCCD
+ 248:main.c        **** 			
+ 249:main.c        **** 			/* If CapSense Initialize Baseline API has not been called yet, call the
+ 250:main.c        **** 			* API and reset the flag. */
+ 251:main.c        **** 			if(initializeCapSenseBaseline)
+ 279              		.loc 1 251 0
+ 280 001c 0E4B     		ldr	r3, .L22+4
+ 281 001e 1B78     		ldrb	r3, [r3]
+ 282 0020 002B     		cmp	r3, #0
+ 283 0022 04D0     		beq	.L19
+ 252:main.c        **** 			{
+ 253:main.c        **** 				/* Reset 'initializeCapSenseBaseline' flag*/
+ 254:main.c        **** 				initializeCapSenseBaseline = FALSE;
+ 284              		.loc 1 254 0
+ 285 0024 0C4B     		ldr	r3, .L22+4
+ 286 0026 0022     		movs	r2, #0
+ 287 0028 1A70     		strb	r2, [r3]
+ 255:main.c        **** 				
+ 256:main.c        **** 				/* Initialize all CapSense Baseline */
+ 257:main.c        **** 				CapSense_InitializeAllBaselines();
+ 288              		.loc 1 257 0
+ 289 002a FFF7FEFF 		bl	CapSense_InitializeAllBaselines
+ 290              	.L19:
+ 258:main.c        **** 			}
+ 259:main.c        **** 			
+ 260:main.c        **** 			/* Send proximity data when notifications are enabled */
+ 261:main.c        **** 			if(startNotification & CCCD_NTF_BIT_MASK)
+ 291              		.loc 1 261 0
+ 292 002e 0B4B     		ldr	r3, .L22+8
+ 293 0030 1B78     		ldrb	r3, [r3]
+ 294 0032 1A00     		movs	r2, r3
+ 295 0034 0123     		movs	r3, #1
+ 296 0036 1340     		ands	r3, r2
+ 297 0038 01D0     		beq	.L18
+ 262:main.c        **** 			{
+ 263:main.c        **** 				/*Check for CapSense proximity change and report to BLE central device*/
+ 264:main.c        **** 				HandleCapSenseProximity();
+ 298              		.loc 1 264 0
+ 299 003a FFF7FEFF 		bl	HandleCapSenseProximity
+ 300              	.L18:
+ 265:main.c        **** 			}
+ 266:main.c        **** 		}
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 11
+
+
+ 267:main.c        **** 
+ 268:main.c        **** 		if(restartAdvertisement)
+ 301              		.loc 1 268 0
+ 302 003e 084B     		ldr	r3, .L22+12
+ 303 0040 1B78     		ldrb	r3, [r3]
+ 304 0042 002B     		cmp	r3, #0
+ 305 0044 E0D0     		beq	.L21
+ 269:main.c        **** 		{
+ 270:main.c        **** 			/* Reset 'restartAdvertisement' flag*/
+ 271:main.c        **** 			restartAdvertisement = FALSE;
+ 306              		.loc 1 271 0
+ 307 0046 064B     		ldr	r3, .L22+12
+ 308 0048 0022     		movs	r2, #0
+ 309 004a 1A70     		strb	r2, [r3]
+ 272:main.c        **** 			
+ 273:main.c        **** 			/* Start Advertisement and enter Discoverable mode*/
+ 274:main.c        **** 			CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);	
+ 310              		.loc 1 274 0
+ 311 004c 0020     		movs	r0, #0
+ 312 004e FFF7FEFF 		bl	CyBle_GappStartAdvertisement
+ 275:main.c        **** 		}
+ 276:main.c        ****     }	/* This is end of for(;;) */
+ 313              		.loc 1 276 0
+ 314 0052 D9E7     		b	.L21
+ 315              	.L23:
+ 316              		.align	2
+ 317              	.L22:
+ 318 0054 00000000 		.word	deviceConnected
+ 319 0058 00000000 		.word	initializeCapSenseBaseline
+ 320 005c 00000000 		.word	startNotification
+ 321 0060 00000000 		.word	restartAdvertisement
+ 322              		.cfi_endproc
+ 323              	.LFE39:
+ 324              		.size	Proximity_Task, .-Proximity_Task
+ 325              		.data
+ 326 0001 00       		.align	1
+ 327              		.type	proxCounter.7717, %object
+ 328              		.size	proxCounter.7717, 2
+ 329              	proxCounter.7717:
+ 330 0002 0100     		.short	1
+ 331              		.text
+ 332              	.Letext0:
+ 333              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 334              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 335              		.file 4 "Generated_Source\\PSoC4/core_cm0_psoc4.h"
+ 336              		.section	.debug_info,"",%progbits
+ 337              	.Ldebug_info0:
+ 338 0000 8A030000 		.4byte	0x38a
+ 339 0004 0400     		.2byte	0x4
+ 340 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 341 000a 04       		.byte	0x4
+ 342 000b 01       		.uleb128 0x1
+ 343 000c D2040000 		.4byte	.LASF103
+ 344 0010 0C       		.byte	0xc
+ 345 0011 A9080000 		.4byte	.LASF104
+ 346 0015 7E0A0000 		.4byte	.LASF105
+ 347 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 12
+
+
+ 348 001d 00000000 		.4byte	0
+ 349 0021 00000000 		.4byte	.Ldebug_line0
+ 350 0025 02       		.uleb128 0x2
+ 351 0026 01       		.byte	0x1
+ 352 0027 06       		.byte	0x6
+ 353 0028 4A060000 		.4byte	.LASF0
+ 354 002c 02       		.uleb128 0x2
+ 355 002d 01       		.byte	0x1
+ 356 002e 08       		.byte	0x8
+ 357 002f E0050000 		.4byte	.LASF1
+ 358 0033 02       		.uleb128 0x2
+ 359 0034 02       		.byte	0x2
+ 360 0035 05       		.byte	0x5
+ 361 0036 EF000000 		.4byte	.LASF2
+ 362 003a 02       		.uleb128 0x2
+ 363 003b 02       		.byte	0x2
+ 364 003c 07       		.byte	0x7
+ 365 003d 97070000 		.4byte	.LASF3
+ 366 0041 02       		.uleb128 0x2
+ 367 0042 04       		.byte	0x4
+ 368 0043 05       		.byte	0x5
+ 369 0044 FE030000 		.4byte	.LASF4
+ 370 0048 02       		.uleb128 0x2
+ 371 0049 04       		.byte	0x4
+ 372 004a 07       		.byte	0x7
+ 373 004b E9060000 		.4byte	.LASF5
+ 374 004f 02       		.uleb128 0x2
+ 375 0050 08       		.byte	0x8
+ 376 0051 05       		.byte	0x5
+ 377 0052 2E090000 		.4byte	.LASF6
+ 378 0056 02       		.uleb128 0x2
+ 379 0057 08       		.byte	0x8
+ 380 0058 07       		.byte	0x7
+ 381 0059 73010000 		.4byte	.LASF7
+ 382 005d 03       		.uleb128 0x3
+ 383 005e 04       		.byte	0x4
+ 384 005f 05       		.byte	0x5
+ 385 0060 696E7400 		.ascii	"int\000"
+ 386 0064 02       		.uleb128 0x2
+ 387 0065 04       		.byte	0x4
+ 388 0066 07       		.byte	0x7
+ 389 0067 B3060000 		.4byte	.LASF8
+ 390 006b 04       		.uleb128 0x4
+ 391 006c 3B080000 		.4byte	.LASF9
+ 392 0070 02       		.byte	0x2
+ 393 0071 E701     		.2byte	0x1e7
+ 394 0073 2C000000 		.4byte	0x2c
+ 395 0077 04       		.uleb128 0x4
+ 396 0078 5D020000 		.4byte	.LASF10
+ 397 007c 02       		.byte	0x2
+ 398 007d E801     		.2byte	0x1e8
+ 399 007f 3A000000 		.4byte	0x3a
+ 400 0083 02       		.uleb128 0x2
+ 401 0084 04       		.byte	0x4
+ 402 0085 04       		.byte	0x4
+ 403 0086 24000000 		.4byte	.LASF11
+ 404 008a 02       		.uleb128 0x2
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 13
+
+
+ 405 008b 08       		.byte	0x8
+ 406 008c 04       		.byte	0x4
+ 407 008d D3080000 		.4byte	.LASF12
+ 408 0091 02       		.uleb128 0x2
+ 409 0092 01       		.byte	0x1
+ 410 0093 08       		.byte	0x8
+ 411 0094 1A080000 		.4byte	.LASF13
+ 412 0098 04       		.uleb128 0x4
+ 413 0099 AE030000 		.4byte	.LASF14
+ 414 009d 02       		.byte	0x2
+ 415 009e A302     		.2byte	0x2a3
+ 416 00a0 A4000000 		.4byte	0xa4
+ 417 00a4 05       		.uleb128 0x5
+ 418 00a5 04       		.byte	0x4
+ 419 00a6 AA000000 		.4byte	0xaa
+ 420 00aa 06       		.uleb128 0x6
+ 421 00ab 02       		.uleb128 0x2
+ 422 00ac 08       		.byte	0x8
+ 423 00ad 04       		.byte	0x4
+ 424 00ae A2050000 		.4byte	.LASF15
+ 425 00b2 02       		.uleb128 0x2
+ 426 00b3 04       		.byte	0x4
+ 427 00b4 07       		.byte	0x7
+ 428 00b5 31010000 		.4byte	.LASF16
+ 429 00b9 07       		.uleb128 0x7
+ 430 00ba 04       		.byte	0x4
+ 431 00bb 08       		.uleb128 0x8
+ 432 00bc 01       		.byte	0x1
+ 433 00bd 2C000000 		.4byte	0x2c
+ 434 00c1 03       		.byte	0x3
+ 435 00c2 3501     		.2byte	0x135
+ 436 00c4 79020000 		.4byte	0x279
+ 437 00c8 09       		.uleb128 0x9
+ 438 00c9 DA020000 		.4byte	.LASF17
+ 439 00cd 00       		.byte	0
+ 440 00ce 09       		.uleb128 0x9
+ 441 00cf F7010000 		.4byte	.LASF18
+ 442 00d3 01       		.byte	0x1
+ 443 00d4 09       		.uleb128 0x9
+ 444 00d5 6C0A0000 		.4byte	.LASF19
+ 445 00d9 02       		.byte	0x2
+ 446 00da 09       		.uleb128 0x9
+ 447 00db 63090000 		.4byte	.LASF20
+ 448 00df 03       		.byte	0x3
+ 449 00e0 09       		.uleb128 0x9
+ 450 00e1 A3010000 		.4byte	.LASF21
+ 451 00e5 04       		.byte	0x4
+ 452 00e6 09       		.uleb128 0x9
+ 453 00e7 90040000 		.4byte	.LASF22
+ 454 00eb 05       		.byte	0x5
+ 455 00ec 09       		.uleb128 0x9
+ 456 00ed 66000000 		.4byte	.LASF23
+ 457 00f1 06       		.byte	0x6
+ 458 00f2 09       		.uleb128 0x9
+ 459 00f3 C1090000 		.4byte	.LASF24
+ 460 00f7 20       		.byte	0x20
+ 461 00f8 09       		.uleb128 0x9
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 14
+
+
+ 462 00f9 FB060000 		.4byte	.LASF25
+ 463 00fd 21       		.byte	0x21
+ 464 00fe 09       		.uleb128 0x9
+ 465 00ff 00000000 		.4byte	.LASF26
+ 466 0103 22       		.byte	0x22
+ 467 0104 09       		.uleb128 0x9
+ 468 0105 AC040000 		.4byte	.LASF27
+ 469 0109 23       		.byte	0x23
+ 470 010a 09       		.uleb128 0x9
+ 471 010b 97060000 		.4byte	.LASF28
+ 472 010f 24       		.byte	0x24
+ 473 0110 09       		.uleb128 0x9
+ 474 0111 F9000000 		.4byte	.LASF29
+ 475 0115 25       		.byte	0x25
+ 476 0116 09       		.uleb128 0x9
+ 477 0117 47040000 		.4byte	.LASF30
+ 478 011b 26       		.byte	0x26
+ 479 011c 09       		.uleb128 0x9
+ 480 011d 28040000 		.4byte	.LASF31
+ 481 0121 27       		.byte	0x27
+ 482 0122 09       		.uleb128 0x9
+ 483 0123 99000000 		.4byte	.LASF32
+ 484 0127 28       		.byte	0x28
+ 485 0128 09       		.uleb128 0x9
+ 486 0129 3F070000 		.4byte	.LASF33
+ 487 012d 29       		.byte	0x29
+ 488 012e 09       		.uleb128 0x9
+ 489 012f CA070000 		.4byte	.LASF34
+ 490 0133 2A       		.byte	0x2a
+ 491 0134 09       		.uleb128 0x9
+ 492 0135 8A080000 		.4byte	.LASF35
+ 493 0139 2B       		.byte	0x2b
+ 494 013a 09       		.uleb128 0x9
+ 495 013b 76020000 		.4byte	.LASF36
+ 496 013f 2C       		.byte	0x2c
+ 497 0140 09       		.uleb128 0x9
+ 498 0141 64030000 		.4byte	.LASF37
+ 499 0145 2D       		.byte	0x2d
+ 500 0146 09       		.uleb128 0x9
+ 501 0147 CB000000 		.4byte	.LASF38
+ 502 014b 2E       		.byte	0x2e
+ 503 014c 09       		.uleb128 0x9
+ 504 014d 940B0000 		.4byte	.LASF39
+ 505 0151 2F       		.byte	0x2f
+ 506 0152 09       		.uleb128 0x9
+ 507 0153 3A010000 		.4byte	.LASF40
+ 508 0157 30       		.byte	0x30
+ 509 0158 09       		.uleb128 0x9
+ 510 0159 7E050000 		.4byte	.LASF41
+ 511 015d 31       		.byte	0x31
+ 512 015e 09       		.uleb128 0x9
+ 513 015f 8D030000 		.4byte	.LASF42
+ 514 0163 32       		.byte	0x32
+ 515 0164 09       		.uleb128 0x9
+ 516 0165 F3070000 		.4byte	.LASF43
+ 517 0169 33       		.byte	0x33
+ 518 016a 09       		.uleb128 0x9
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 15
+
+
+ 519 016b 5C070000 		.4byte	.LASF44
+ 520 016f 34       		.byte	0x34
+ 521 0170 09       		.uleb128 0x9
+ 522 0171 11090000 		.4byte	.LASF45
+ 523 0175 35       		.byte	0x35
+ 524 0176 09       		.uleb128 0x9
+ 525 0177 BB030000 		.4byte	.LASF46
+ 526 017b 36       		.byte	0x36
+ 527 017c 09       		.uleb128 0x9
+ 528 017d 0A020000 		.4byte	.LASF47
+ 529 0181 37       		.byte	0x37
+ 530 0182 09       		.uleb128 0x9
+ 531 0183 7F000000 		.4byte	.LASF48
+ 532 0187 40       		.byte	0x40
+ 533 0188 09       		.uleb128 0x9
+ 534 0189 CE060000 		.4byte	.LASF49
+ 535 018d 41       		.byte	0x41
+ 536 018e 09       		.uleb128 0x9
+ 537 018f 13010000 		.4byte	.LASF50
+ 538 0193 42       		.byte	0x42
+ 539 0194 09       		.uleb128 0x9
+ 540 0195 3F020000 		.4byte	.LASF51
+ 541 0199 43       		.byte	0x43
+ 542 019a 09       		.uleb128 0x9
+ 543 019b 2A0A0000 		.4byte	.LASF52
+ 544 019f 44       		.byte	0x44
+ 545 01a0 09       		.uleb128 0x9
+ 546 01a1 E5090000 		.4byte	.LASF53
+ 547 01a5 45       		.byte	0x45
+ 548 01a6 09       		.uleb128 0x9
+ 549 01a7 B8010000 		.4byte	.LASF54
+ 550 01ab 46       		.byte	0x46
+ 551 01ac 09       		.uleb128 0x9
+ 552 01ad 2C060000 		.4byte	.LASF55
+ 553 01b1 47       		.byte	0x47
+ 554 01b2 09       		.uleb128 0x9
+ 555 01b3 70060000 		.4byte	.LASF56
+ 556 01b7 48       		.byte	0x48
+ 557 01b8 09       		.uleb128 0x9
+ 558 01b9 4B030000 		.4byte	.LASF57
+ 559 01bd 49       		.byte	0x49
+ 560 01be 09       		.uleb128 0x9
+ 561 01bf 4D080000 		.4byte	.LASF58
+ 562 01c3 4A       		.byte	0x4a
+ 563 01c4 09       		.uleb128 0x9
+ 564 01c5 9A020000 		.4byte	.LASF59
+ 565 01c9 4B       		.byte	0x4b
+ 566 01ca 09       		.uleb128 0x9
+ 567 01cb 56060000 		.4byte	.LASF60
+ 568 01cf 4C       		.byte	0x4c
+ 569 01d0 09       		.uleb128 0x9
+ 570 01d1 4C000000 		.4byte	.LASF61
+ 571 01d5 4D       		.byte	0x4d
+ 572 01d6 09       		.uleb128 0x9
+ 573 01d7 0C0A0000 		.4byte	.LASF62
+ 574 01db 4E       		.byte	0x4e
+ 575 01dc 09       		.uleb128 0x9
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 16
+
+
+ 576 01dd EE050000 		.4byte	.LASF63
+ 577 01e1 4F       		.byte	0x4f
+ 578 01e2 09       		.uleb128 0x9
+ 579 01e3 330B0000 		.4byte	.LASF64
+ 580 01e7 50       		.byte	0x50
+ 581 01e8 09       		.uleb128 0x9
+ 582 01e9 6B080000 		.4byte	.LASF65
+ 583 01ed 51       		.byte	0x51
+ 584 01ee 09       		.uleb128 0x9
+ 585 01ef 6F040000 		.4byte	.LASF66
+ 586 01f3 52       		.byte	0x52
+ 587 01f4 09       		.uleb128 0x9
+ 588 01f5 07040000 		.4byte	.LASF67
+ 589 01f9 53       		.byte	0x53
+ 590 01fa 09       		.uleb128 0x9
+ 591 01fb B9020000 		.4byte	.LASF68
+ 592 01ff 54       		.byte	0x54
+ 593 0200 09       		.uleb128 0x9
+ 594 0201 5E0B0000 		.4byte	.LASF69
+ 595 0205 55       		.byte	0x55
+ 596 0206 09       		.uleb128 0x9
+ 597 0207 110B0000 		.4byte	.LASF70
+ 598 020b 56       		.byte	0x56
+ 599 020c 09       		.uleb128 0x9
+ 600 020d E80A0000 		.4byte	.LASF71
+ 601 0211 57       		.byte	0x57
+ 602 0212 09       		.uleb128 0x9
+ 603 0213 74070000 		.4byte	.LASF72
+ 604 0217 58       		.byte	0x58
+ 605 0218 09       		.uleb128 0x9
+ 606 0219 BA050000 		.4byte	.LASF73
+ 607 021d 70       		.byte	0x70
+ 608 021e 09       		.uleb128 0x9
+ 609 021f 9B090000 		.4byte	.LASF74
+ 610 0223 71       		.byte	0x71
+ 611 0224 09       		.uleb128 0x9
+ 612 0225 1F080000 		.4byte	.LASF75
+ 613 0229 72       		.byte	0x72
+ 614 022a 09       		.uleb128 0x9
+ 615 022b F1020000 		.4byte	.LASF76
+ 616 022f 73       		.byte	0x73
+ 617 0230 09       		.uleb128 0x9
+ 618 0231 60050000 		.4byte	.LASF77
+ 619 0235 74       		.byte	0x74
+ 620 0236 09       		.uleb128 0x9
+ 621 0237 1E070000 		.4byte	.LASF78
+ 622 023b 75       		.byte	0x75
+ 623 023c 09       		.uleb128 0x9
+ 624 023d 0F030000 		.4byte	.LASF79
+ 625 0241 76       		.byte	0x76
+ 626 0242 09       		.uleb128 0x9
+ 627 0243 7C090000 		.4byte	.LASF80
+ 628 0247 77       		.byte	0x77
+ 629 0248 09       		.uleb128 0x9
+ 630 0249 B0080000 		.4byte	.LASF81
+ 631 024d 78       		.byte	0x78
+ 632 024e 09       		.uleb128 0x9
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 17
+
+
+ 633 024f DA080000 		.4byte	.LASF82
+ 634 0253 79       		.byte	0x79
+ 635 0254 09       		.uleb128 0x9
+ 636 0255 480A0000 		.4byte	.LASF83
+ 637 0259 7A       		.byte	0x7a
+ 638 025a 09       		.uleb128 0x9
+ 639 025b D9010000 		.4byte	.LASF84
+ 640 025f FA       		.byte	0xfa
+ 641 0260 09       		.uleb128 0x9
+ 642 0261 0D060000 		.4byte	.LASF85
+ 643 0265 FB       		.byte	0xfb
+ 644 0266 09       		.uleb128 0x9
+ 645 0267 820B0000 		.4byte	.LASF86
+ 646 026b FC       		.byte	0xfc
+ 647 026c 09       		.uleb128 0x9
+ 648 026d 5B010000 		.4byte	.LASF87
+ 649 0271 FD       		.byte	0xfd
+ 650 0272 09       		.uleb128 0x9
+ 651 0273 DC030000 		.4byte	.LASF88
+ 652 0277 FF       		.byte	0xff
+ 653 0278 00       		.byte	0
+ 654 0279 0A       		.uleb128 0xa
+ 655 027a 9E010000 		.4byte	.LASF106
+ 656 027e 01       		.byte	0x1
+ 657 027f 25000000 		.4byte	0x25
+ 658 0283 04       		.byte	0x4
+ 659 0284 17       		.byte	0x17
+ 660 0285 A8020000 		.4byte	0x2a8
+ 661 0289 0B       		.uleb128 0xb
+ 662 028a FD080000 		.4byte	.LASF89
+ 663 028e 72       		.sleb128 -14
+ 664 028f 0B       		.uleb128 0xb
+ 665 0290 8A010000 		.4byte	.LASF90
+ 666 0294 73       		.sleb128 -13
+ 667 0295 0B       		.uleb128 0xb
+ 668 0296 12070000 		.4byte	.LASF91
+ 669 029a 7B       		.sleb128 -5
+ 670 029b 0B       		.uleb128 0xb
+ 671 029c 520B0000 		.4byte	.LASF92
+ 672 02a0 7E       		.sleb128 -2
+ 673 02a1 0B       		.uleb128 0xb
+ 674 02a2 2A000000 		.4byte	.LASF93
+ 675 02a6 7F       		.sleb128 -1
+ 676 02a7 00       		.byte	0
+ 677 02a8 0C       		.uleb128 0xc
+ 678 02a9 C0060000 		.4byte	.LASF107
+ 679 02ad 01       		.byte	0x1
+ 680 02ae 65       		.byte	0x65
+ 681 02af 00000000 		.4byte	.LFB35
+ 682 02b3 34000000 		.4byte	.LFE35-.LFB35
+ 683 02b7 01       		.uleb128 0x1
+ 684 02b8 9C       		.byte	0x9c
+ 685 02b9 0D       		.uleb128 0xd
+ 686 02ba 99010000 		.4byte	.LASF94
+ 687 02be 01       		.byte	0x1
+ 688 02bf 80       		.byte	0x80
+ 689 02c0 5D000000 		.4byte	0x5d
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 18
+
+
+ 690 02c4 00000000 		.4byte	.LFB36
+ 691 02c8 30000000 		.4byte	.LFE36-.LFB36
+ 692 02cc 01       		.uleb128 0x1
+ 693 02cd 9C       		.byte	0x9c
+ 694 02ce F1020000 		.4byte	0x2f1
+ 695 02d2 0E       		.uleb128 0xe
+ 696 02d3 41080000 		.4byte	.LASF108
+ 697 02d7 01       		.byte	0x1
+ 698 02d8 87       		.byte	0x87
+ 699 02d9 5D000000 		.4byte	0x5d
+ 700 02dd E3020000 		.4byte	0x2e3
+ 701 02e1 0F       		.uleb128 0xf
+ 702 02e2 00       		.byte	0
+ 703 02e3 10       		.uleb128 0x10
+ 704 02e4 EA030000 		.4byte	.LASF109
+ 705 02e8 01       		.byte	0x1
+ 706 02e9 89       		.byte	0x89
+ 707 02ea 5D000000 		.4byte	0x5d
+ 708 02ee 0F       		.uleb128 0xf
+ 709 02ef 00       		.byte	0
+ 710 02f0 00       		.byte	0
+ 711 02f1 11       		.uleb128 0x11
+ 712 02f2 AA070000 		.4byte	.LASF110
+ 713 02f6 01       		.byte	0x1
+ 714 02f7 9A       		.byte	0x9a
+ 715 02f8 00000000 		.4byte	.LFB37
+ 716 02fc 28000000 		.4byte	.LFE37-.LFB37
+ 717 0300 01       		.uleb128 0x1
+ 718 0301 9C       		.byte	0x9c
+ 719 0302 12       		.uleb128 0x12
+ 720 0303 4B090000 		.4byte	.LASF95
+ 721 0307 01       		.byte	0x1
+ 722 0308 BE       		.byte	0xbe
+ 723 0309 00000000 		.4byte	.LFB38
+ 724 030d 58000000 		.4byte	.LFE38-.LFB38
+ 725 0311 01       		.uleb128 0x1
+ 726 0312 9C       		.byte	0x9c
+ 727 0313 37030000 		.4byte	0x337
+ 728 0317 13       		.uleb128 0x13
+ 729 0318 AE050000 		.4byte	.LASF96
+ 730 031c 01       		.byte	0x1
+ 731 031d C2       		.byte	0xc2
+ 732 031e 77000000 		.4byte	0x77
+ 733 0322 05       		.uleb128 0x5
+ 734 0323 03       		.byte	0x3
+ 735 0324 02000000 		.4byte	proxCounter.7717
+ 736 0328 13       		.uleb128 0x13
+ 737 0329 BB070000 		.4byte	.LASF97
+ 738 032d 01       		.byte	0x1
+ 739 032e C5       		.byte	0xc5
+ 740 032f 6B000000 		.4byte	0x6b
+ 741 0333 02       		.uleb128 0x2
+ 742 0334 91       		.byte	0x91
+ 743 0335 6F       		.sleb128 -17
+ 744 0336 00       		.byte	0
+ 745 0337 12       		.uleb128 0x12
+ 746 0338 3C090000 		.4byte	.LASF98
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 19
+
+
+ 747 033c 01       		.byte	0x1
+ 748 033d E3       		.byte	0xe3
+ 749 033e 00000000 		.4byte	.LFB39
+ 750 0342 64000000 		.4byte	.LFE39-.LFB39
+ 751 0346 01       		.uleb128 0x1
+ 752 0347 9C       		.byte	0x9c
+ 753 0348 5B030000 		.4byte	0x35b
+ 754 034c 14       		.uleb128 0x14
+ 755 034d 61726700 		.ascii	"arg\000"
+ 756 0351 01       		.byte	0x1
+ 757 0352 E3       		.byte	0xe3
+ 758 0353 B9000000 		.4byte	0xb9
+ 759 0357 02       		.uleb128 0x2
+ 760 0358 91       		.byte	0x91
+ 761 0359 74       		.sleb128 -12
+ 762 035a 00       		.byte	0
+ 763 035b 15       		.uleb128 0x15
+ 764 035c BB000000 		.4byte	.LASF99
+ 765 0360 01       		.byte	0x1
+ 766 0361 50       		.byte	0x50
+ 767 0362 6B000000 		.4byte	0x6b
+ 768 0366 15       		.uleb128 0x15
+ 769 0367 64020000 		.4byte	.LASF100
+ 770 036b 01       		.byte	0x1
+ 771 036c 55       		.byte	0x55
+ 772 036d 6B000000 		.4byte	0x6b
+ 773 0371 15       		.uleb128 0x15
+ 774 0372 37000000 		.4byte	.LASF101
+ 775 0376 01       		.byte	0x1
+ 776 0377 58       		.byte	0x58
+ 777 0378 6B000000 		.4byte	0x6b
+ 778 037c 16       		.uleb128 0x16
+ 779 037d 30030000 		.4byte	.LASF102
+ 780 0381 01       		.byte	0x1
+ 781 0382 5E       		.byte	0x5e
+ 782 0383 6B000000 		.4byte	0x6b
+ 783 0387 05       		.uleb128 0x5
+ 784 0388 03       		.byte	0x3
+ 785 0389 00000000 		.4byte	initializeCapSenseBaseline
+ 786 038d 00       		.byte	0
+ 787              		.section	.debug_abbrev,"",%progbits
+ 788              	.Ldebug_abbrev0:
+ 789 0000 01       		.uleb128 0x1
+ 790 0001 11       		.uleb128 0x11
+ 791 0002 01       		.byte	0x1
+ 792 0003 25       		.uleb128 0x25
+ 793 0004 0E       		.uleb128 0xe
+ 794 0005 13       		.uleb128 0x13
+ 795 0006 0B       		.uleb128 0xb
+ 796 0007 03       		.uleb128 0x3
+ 797 0008 0E       		.uleb128 0xe
+ 798 0009 1B       		.uleb128 0x1b
+ 799 000a 0E       		.uleb128 0xe
+ 800 000b 55       		.uleb128 0x55
+ 801 000c 17       		.uleb128 0x17
+ 802 000d 11       		.uleb128 0x11
+ 803 000e 01       		.uleb128 0x1
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 20
+
+
+ 804 000f 10       		.uleb128 0x10
+ 805 0010 17       		.uleb128 0x17
+ 806 0011 00       		.byte	0
+ 807 0012 00       		.byte	0
+ 808 0013 02       		.uleb128 0x2
+ 809 0014 24       		.uleb128 0x24
+ 810 0015 00       		.byte	0
+ 811 0016 0B       		.uleb128 0xb
+ 812 0017 0B       		.uleb128 0xb
+ 813 0018 3E       		.uleb128 0x3e
+ 814 0019 0B       		.uleb128 0xb
+ 815 001a 03       		.uleb128 0x3
+ 816 001b 0E       		.uleb128 0xe
+ 817 001c 00       		.byte	0
+ 818 001d 00       		.byte	0
+ 819 001e 03       		.uleb128 0x3
+ 820 001f 24       		.uleb128 0x24
+ 821 0020 00       		.byte	0
+ 822 0021 0B       		.uleb128 0xb
+ 823 0022 0B       		.uleb128 0xb
+ 824 0023 3E       		.uleb128 0x3e
+ 825 0024 0B       		.uleb128 0xb
+ 826 0025 03       		.uleb128 0x3
+ 827 0026 08       		.uleb128 0x8
+ 828 0027 00       		.byte	0
+ 829 0028 00       		.byte	0
+ 830 0029 04       		.uleb128 0x4
+ 831 002a 16       		.uleb128 0x16
+ 832 002b 00       		.byte	0
+ 833 002c 03       		.uleb128 0x3
+ 834 002d 0E       		.uleb128 0xe
+ 835 002e 3A       		.uleb128 0x3a
+ 836 002f 0B       		.uleb128 0xb
+ 837 0030 3B       		.uleb128 0x3b
+ 838 0031 05       		.uleb128 0x5
+ 839 0032 49       		.uleb128 0x49
+ 840 0033 13       		.uleb128 0x13
+ 841 0034 00       		.byte	0
+ 842 0035 00       		.byte	0
+ 843 0036 05       		.uleb128 0x5
+ 844 0037 0F       		.uleb128 0xf
+ 845 0038 00       		.byte	0
+ 846 0039 0B       		.uleb128 0xb
+ 847 003a 0B       		.uleb128 0xb
+ 848 003b 49       		.uleb128 0x49
+ 849 003c 13       		.uleb128 0x13
+ 850 003d 00       		.byte	0
+ 851 003e 00       		.byte	0
+ 852 003f 06       		.uleb128 0x6
+ 853 0040 15       		.uleb128 0x15
+ 854 0041 00       		.byte	0
+ 855 0042 27       		.uleb128 0x27
+ 856 0043 19       		.uleb128 0x19
+ 857 0044 00       		.byte	0
+ 858 0045 00       		.byte	0
+ 859 0046 07       		.uleb128 0x7
+ 860 0047 0F       		.uleb128 0xf
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 21
+
+
+ 861 0048 00       		.byte	0
+ 862 0049 0B       		.uleb128 0xb
+ 863 004a 0B       		.uleb128 0xb
+ 864 004b 00       		.byte	0
+ 865 004c 00       		.byte	0
+ 866 004d 08       		.uleb128 0x8
+ 867 004e 04       		.uleb128 0x4
+ 868 004f 01       		.byte	0x1
+ 869 0050 0B       		.uleb128 0xb
+ 870 0051 0B       		.uleb128 0xb
+ 871 0052 49       		.uleb128 0x49
+ 872 0053 13       		.uleb128 0x13
+ 873 0054 3A       		.uleb128 0x3a
+ 874 0055 0B       		.uleb128 0xb
+ 875 0056 3B       		.uleb128 0x3b
+ 876 0057 05       		.uleb128 0x5
+ 877 0058 01       		.uleb128 0x1
+ 878 0059 13       		.uleb128 0x13
+ 879 005a 00       		.byte	0
+ 880 005b 00       		.byte	0
+ 881 005c 09       		.uleb128 0x9
+ 882 005d 28       		.uleb128 0x28
+ 883 005e 00       		.byte	0
+ 884 005f 03       		.uleb128 0x3
+ 885 0060 0E       		.uleb128 0xe
+ 886 0061 1C       		.uleb128 0x1c
+ 887 0062 0B       		.uleb128 0xb
+ 888 0063 00       		.byte	0
+ 889 0064 00       		.byte	0
+ 890 0065 0A       		.uleb128 0xa
+ 891 0066 04       		.uleb128 0x4
+ 892 0067 01       		.byte	0x1
+ 893 0068 03       		.uleb128 0x3
+ 894 0069 0E       		.uleb128 0xe
+ 895 006a 0B       		.uleb128 0xb
+ 896 006b 0B       		.uleb128 0xb
+ 897 006c 49       		.uleb128 0x49
+ 898 006d 13       		.uleb128 0x13
+ 899 006e 3A       		.uleb128 0x3a
+ 900 006f 0B       		.uleb128 0xb
+ 901 0070 3B       		.uleb128 0x3b
+ 902 0071 0B       		.uleb128 0xb
+ 903 0072 01       		.uleb128 0x1
+ 904 0073 13       		.uleb128 0x13
+ 905 0074 00       		.byte	0
+ 906 0075 00       		.byte	0
+ 907 0076 0B       		.uleb128 0xb
+ 908 0077 28       		.uleb128 0x28
+ 909 0078 00       		.byte	0
+ 910 0079 03       		.uleb128 0x3
+ 911 007a 0E       		.uleb128 0xe
+ 912 007b 1C       		.uleb128 0x1c
+ 913 007c 0D       		.uleb128 0xd
+ 914 007d 00       		.byte	0
+ 915 007e 00       		.byte	0
+ 916 007f 0C       		.uleb128 0xc
+ 917 0080 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 22
+
+
+ 918 0081 00       		.byte	0
+ 919 0082 3F       		.uleb128 0x3f
+ 920 0083 19       		.uleb128 0x19
+ 921 0084 03       		.uleb128 0x3
+ 922 0085 0E       		.uleb128 0xe
+ 923 0086 3A       		.uleb128 0x3a
+ 924 0087 0B       		.uleb128 0xb
+ 925 0088 3B       		.uleb128 0x3b
+ 926 0089 0B       		.uleb128 0xb
+ 927 008a 11       		.uleb128 0x11
+ 928 008b 01       		.uleb128 0x1
+ 929 008c 12       		.uleb128 0x12
+ 930 008d 06       		.uleb128 0x6
+ 931 008e 40       		.uleb128 0x40
+ 932 008f 18       		.uleb128 0x18
+ 933 0090 9642     		.uleb128 0x2116
+ 934 0092 19       		.uleb128 0x19
+ 935 0093 00       		.byte	0
+ 936 0094 00       		.byte	0
+ 937 0095 0D       		.uleb128 0xd
+ 938 0096 2E       		.uleb128 0x2e
+ 939 0097 01       		.byte	0x1
+ 940 0098 3F       		.uleb128 0x3f
+ 941 0099 19       		.uleb128 0x19
+ 942 009a 03       		.uleb128 0x3
+ 943 009b 0E       		.uleb128 0xe
+ 944 009c 3A       		.uleb128 0x3a
+ 945 009d 0B       		.uleb128 0xb
+ 946 009e 3B       		.uleb128 0x3b
+ 947 009f 0B       		.uleb128 0xb
+ 948 00a0 49       		.uleb128 0x49
+ 949 00a1 13       		.uleb128 0x13
+ 950 00a2 11       		.uleb128 0x11
+ 951 00a3 01       		.uleb128 0x1
+ 952 00a4 12       		.uleb128 0x12
+ 953 00a5 06       		.uleb128 0x6
+ 954 00a6 40       		.uleb128 0x40
+ 955 00a7 18       		.uleb128 0x18
+ 956 00a8 9642     		.uleb128 0x2116
+ 957 00aa 19       		.uleb128 0x19
+ 958 00ab 01       		.uleb128 0x1
+ 959 00ac 13       		.uleb128 0x13
+ 960 00ad 00       		.byte	0
+ 961 00ae 00       		.byte	0
+ 962 00af 0E       		.uleb128 0xe
+ 963 00b0 2E       		.uleb128 0x2e
+ 964 00b1 01       		.byte	0x1
+ 965 00b2 3F       		.uleb128 0x3f
+ 966 00b3 19       		.uleb128 0x19
+ 967 00b4 03       		.uleb128 0x3
+ 968 00b5 0E       		.uleb128 0xe
+ 969 00b6 3A       		.uleb128 0x3a
+ 970 00b7 0B       		.uleb128 0xb
+ 971 00b8 3B       		.uleb128 0x3b
+ 972 00b9 0B       		.uleb128 0xb
+ 973 00ba 49       		.uleb128 0x49
+ 974 00bb 13       		.uleb128 0x13
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 23
+
+
+ 975 00bc 3C       		.uleb128 0x3c
+ 976 00bd 19       		.uleb128 0x19
+ 977 00be 01       		.uleb128 0x1
+ 978 00bf 13       		.uleb128 0x13
+ 979 00c0 00       		.byte	0
+ 980 00c1 00       		.byte	0
+ 981 00c2 0F       		.uleb128 0xf
+ 982 00c3 18       		.uleb128 0x18
+ 983 00c4 00       		.byte	0
+ 984 00c5 00       		.byte	0
+ 985 00c6 00       		.byte	0
+ 986 00c7 10       		.uleb128 0x10
+ 987 00c8 2E       		.uleb128 0x2e
+ 988 00c9 01       		.byte	0x1
+ 989 00ca 3F       		.uleb128 0x3f
+ 990 00cb 19       		.uleb128 0x19
+ 991 00cc 03       		.uleb128 0x3
+ 992 00cd 0E       		.uleb128 0xe
+ 993 00ce 3A       		.uleb128 0x3a
+ 994 00cf 0B       		.uleb128 0xb
+ 995 00d0 3B       		.uleb128 0x3b
+ 996 00d1 0B       		.uleb128 0xb
+ 997 00d2 49       		.uleb128 0x49
+ 998 00d3 13       		.uleb128 0x13
+ 999 00d4 3C       		.uleb128 0x3c
+ 1000 00d5 19       		.uleb128 0x19
+ 1001 00d6 00       		.byte	0
+ 1002 00d7 00       		.byte	0
+ 1003 00d8 11       		.uleb128 0x11
+ 1004 00d9 2E       		.uleb128 0x2e
+ 1005 00da 00       		.byte	0
+ 1006 00db 3F       		.uleb128 0x3f
+ 1007 00dc 19       		.uleb128 0x19
+ 1008 00dd 03       		.uleb128 0x3
+ 1009 00de 0E       		.uleb128 0xe
+ 1010 00df 3A       		.uleb128 0x3a
+ 1011 00e0 0B       		.uleb128 0xb
+ 1012 00e1 3B       		.uleb128 0x3b
+ 1013 00e2 0B       		.uleb128 0xb
+ 1014 00e3 27       		.uleb128 0x27
+ 1015 00e4 19       		.uleb128 0x19
+ 1016 00e5 11       		.uleb128 0x11
+ 1017 00e6 01       		.uleb128 0x1
+ 1018 00e7 12       		.uleb128 0x12
+ 1019 00e8 06       		.uleb128 0x6
+ 1020 00e9 40       		.uleb128 0x40
+ 1021 00ea 18       		.uleb128 0x18
+ 1022 00eb 9642     		.uleb128 0x2116
+ 1023 00ed 19       		.uleb128 0x19
+ 1024 00ee 00       		.byte	0
+ 1025 00ef 00       		.byte	0
+ 1026 00f0 12       		.uleb128 0x12
+ 1027 00f1 2E       		.uleb128 0x2e
+ 1028 00f2 01       		.byte	0x1
+ 1029 00f3 3F       		.uleb128 0x3f
+ 1030 00f4 19       		.uleb128 0x19
+ 1031 00f5 03       		.uleb128 0x3
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 24
+
+
+ 1032 00f6 0E       		.uleb128 0xe
+ 1033 00f7 3A       		.uleb128 0x3a
+ 1034 00f8 0B       		.uleb128 0xb
+ 1035 00f9 3B       		.uleb128 0x3b
+ 1036 00fa 0B       		.uleb128 0xb
+ 1037 00fb 27       		.uleb128 0x27
+ 1038 00fc 19       		.uleb128 0x19
+ 1039 00fd 11       		.uleb128 0x11
+ 1040 00fe 01       		.uleb128 0x1
+ 1041 00ff 12       		.uleb128 0x12
+ 1042 0100 06       		.uleb128 0x6
+ 1043 0101 40       		.uleb128 0x40
+ 1044 0102 18       		.uleb128 0x18
+ 1045 0103 9642     		.uleb128 0x2116
+ 1046 0105 19       		.uleb128 0x19
+ 1047 0106 01       		.uleb128 0x1
+ 1048 0107 13       		.uleb128 0x13
+ 1049 0108 00       		.byte	0
+ 1050 0109 00       		.byte	0
+ 1051 010a 13       		.uleb128 0x13
+ 1052 010b 34       		.uleb128 0x34
+ 1053 010c 00       		.byte	0
+ 1054 010d 03       		.uleb128 0x3
+ 1055 010e 0E       		.uleb128 0xe
+ 1056 010f 3A       		.uleb128 0x3a
+ 1057 0110 0B       		.uleb128 0xb
+ 1058 0111 3B       		.uleb128 0x3b
+ 1059 0112 0B       		.uleb128 0xb
+ 1060 0113 49       		.uleb128 0x49
+ 1061 0114 13       		.uleb128 0x13
+ 1062 0115 02       		.uleb128 0x2
+ 1063 0116 18       		.uleb128 0x18
+ 1064 0117 00       		.byte	0
+ 1065 0118 00       		.byte	0
+ 1066 0119 14       		.uleb128 0x14
+ 1067 011a 05       		.uleb128 0x5
+ 1068 011b 00       		.byte	0
+ 1069 011c 03       		.uleb128 0x3
+ 1070 011d 08       		.uleb128 0x8
+ 1071 011e 3A       		.uleb128 0x3a
+ 1072 011f 0B       		.uleb128 0xb
+ 1073 0120 3B       		.uleb128 0x3b
+ 1074 0121 0B       		.uleb128 0xb
+ 1075 0122 49       		.uleb128 0x49
+ 1076 0123 13       		.uleb128 0x13
+ 1077 0124 02       		.uleb128 0x2
+ 1078 0125 18       		.uleb128 0x18
+ 1079 0126 00       		.byte	0
+ 1080 0127 00       		.byte	0
+ 1081 0128 15       		.uleb128 0x15
+ 1082 0129 34       		.uleb128 0x34
+ 1083 012a 00       		.byte	0
+ 1084 012b 03       		.uleb128 0x3
+ 1085 012c 0E       		.uleb128 0xe
+ 1086 012d 3A       		.uleb128 0x3a
+ 1087 012e 0B       		.uleb128 0xb
+ 1088 012f 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 25
+
+
+ 1089 0130 0B       		.uleb128 0xb
+ 1090 0131 49       		.uleb128 0x49
+ 1091 0132 13       		.uleb128 0x13
+ 1092 0133 3F       		.uleb128 0x3f
+ 1093 0134 19       		.uleb128 0x19
+ 1094 0135 3C       		.uleb128 0x3c
+ 1095 0136 19       		.uleb128 0x19
+ 1096 0137 00       		.byte	0
+ 1097 0138 00       		.byte	0
+ 1098 0139 16       		.uleb128 0x16
+ 1099 013a 34       		.uleb128 0x34
+ 1100 013b 00       		.byte	0
+ 1101 013c 03       		.uleb128 0x3
+ 1102 013d 0E       		.uleb128 0xe
+ 1103 013e 3A       		.uleb128 0x3a
+ 1104 013f 0B       		.uleb128 0xb
+ 1105 0140 3B       		.uleb128 0x3b
+ 1106 0141 0B       		.uleb128 0xb
+ 1107 0142 49       		.uleb128 0x49
+ 1108 0143 13       		.uleb128 0x13
+ 1109 0144 3F       		.uleb128 0x3f
+ 1110 0145 19       		.uleb128 0x19
+ 1111 0146 02       		.uleb128 0x2
+ 1112 0147 18       		.uleb128 0x18
+ 1113 0148 00       		.byte	0
+ 1114 0149 00       		.byte	0
+ 1115 014a 00       		.byte	0
+ 1116              		.section	.debug_aranges,"",%progbits
+ 1117 0000 3C000000 		.4byte	0x3c
+ 1118 0004 0200     		.2byte	0x2
+ 1119 0006 00000000 		.4byte	.Ldebug_info0
+ 1120 000a 04       		.byte	0x4
+ 1121 000b 00       		.byte	0
+ 1122 000c 0000     		.2byte	0
+ 1123 000e 0000     		.2byte	0
+ 1124 0010 00000000 		.4byte	.LFB35
+ 1125 0014 34000000 		.4byte	.LFE35-.LFB35
+ 1126 0018 00000000 		.4byte	.LFB36
+ 1127 001c 30000000 		.4byte	.LFE36-.LFB36
+ 1128 0020 00000000 		.4byte	.LFB37
+ 1129 0024 28000000 		.4byte	.LFE37-.LFB37
+ 1130 0028 00000000 		.4byte	.LFB38
+ 1131 002c 58000000 		.4byte	.LFE38-.LFB38
+ 1132 0030 00000000 		.4byte	.LFB39
+ 1133 0034 64000000 		.4byte	.LFE39-.LFB39
+ 1134 0038 00000000 		.4byte	0
+ 1135 003c 00000000 		.4byte	0
+ 1136              		.section	.debug_ranges,"",%progbits
+ 1137              	.Ldebug_ranges0:
+ 1138 0000 00000000 		.4byte	.LFB35
+ 1139 0004 34000000 		.4byte	.LFE35
+ 1140 0008 00000000 		.4byte	.LFB36
+ 1141 000c 30000000 		.4byte	.LFE36
+ 1142 0010 00000000 		.4byte	.LFB37
+ 1143 0014 28000000 		.4byte	.LFE37
+ 1144 0018 00000000 		.4byte	.LFB38
+ 1145 001c 58000000 		.4byte	.LFE38
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 26
+
+
+ 1146 0020 00000000 		.4byte	.LFB39
+ 1147 0024 64000000 		.4byte	.LFE39
+ 1148 0028 00000000 		.4byte	0
+ 1149 002c 00000000 		.4byte	0
+ 1150              		.section	.debug_line,"",%progbits
+ 1151              	.Ldebug_line0:
+ 1152 0000 E7000000 		.section	.debug_str,"MS",%progbits,1
+ 1152      02006400 
+ 1152      00000201 
+ 1152      FB0E0D00 
+ 1152      01010101 
+ 1153              	.LASF26:
+ 1154 0000 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1154      455F4556 
+ 1154      545F4741 
+ 1154      505F5041 
+ 1154      53534B45 
+ 1155              	.LASF11:
+ 1156 0024 666C6F61 		.ascii	"float\000"
+ 1156      7400
+ 1157              	.LASF93:
+ 1158 002a 53797354 		.ascii	"SysTick_IRQn\000"
+ 1158      69636B5F 
+ 1158      4952516E 
+ 1158      00
+ 1159              	.LASF101:
+ 1160 0037 72657374 		.ascii	"restartAdvertisement\000"
+ 1160      61727441 
+ 1160      64766572 
+ 1160      74697365 
+ 1160      6D656E74 
+ 1161              	.LASF61:
+ 1162 004c 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1162      455F4556 
+ 1162      545F4741 
+ 1162      5454435F 
+ 1162      57524954 
+ 1163              	.LASF23:
+ 1164 0066 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1164      455F4556 
+ 1164      545F4D45 
+ 1164      4D4F5259 
+ 1164      5F524551 
+ 1165              	.LASF48:
+ 1166 007f 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1166      455F4556 
+ 1166      545F4741 
+ 1166      5454435F 
+ 1166      4552524F 
+ 1167              	.LASF32:
+ 1168 0099 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 1168      455F4556 
+ 1168      545F4741 
+ 1168      505F4445 
+ 1168      56494345 
+ 1169              	.LASF99:
+ 1170 00bb 64657669 		.ascii	"deviceConnected\000"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 27
+
+
+ 1170      6365436F 
+ 1170      6E6E6563 
+ 1170      74656400 
+ 1171              	.LASF38:
+ 1172 00cb 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 1172      455F4556 
+ 1172      545F4741 
+ 1172      505F4B45 
+ 1172      59505245 
+ 1173              	.LASF2:
+ 1174 00ef 73686F72 		.ascii	"short int\000"
+ 1174      7420696E 
+ 1174      7400
+ 1175              	.LASF29:
+ 1176 00f9 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1176      455F4556 
+ 1176      545F4741 
+ 1176      505F4155 
+ 1176      54485F46 
+ 1177              	.LASF50:
+ 1178 0113 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1178      455F4556 
+ 1178      545F4741 
+ 1178      54545F44 
+ 1178      4953434F 
+ 1179              	.LASF16:
+ 1180 0131 73697A65 		.ascii	"sizetype\000"
+ 1180      74797065 
+ 1180      00
+ 1181              	.LASF40:
+ 1182 013a 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 1182      455F4556 
+ 1182      545F4741 
+ 1182      505F4441 
+ 1182      54415F4C 
+ 1183              	.LASF87:
+ 1184 015b 4359424C 		.ascii	"CYBLE_EVT_FLASH_CORRUPT\000"
+ 1184      455F4556 
+ 1184      545F464C 
+ 1184      4153485F 
+ 1184      434F5252 
+ 1185              	.LASF7:
+ 1186 0173 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1186      206C6F6E 
+ 1186      6720756E 
+ 1186      7369676E 
+ 1186      65642069 
+ 1187              	.LASF90:
+ 1188 018a 48617264 		.ascii	"HardFault_IRQn\000"
+ 1188      4661756C 
+ 1188      745F4952 
+ 1188      516E00
+ 1189              	.LASF94:
+ 1190 0199 6D61696E 		.ascii	"main\000"
+ 1190      00
+ 1191              	.LASF106:
+ 1192 019e 4952516E 		.ascii	"IRQn\000"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 28
+
+
+ 1192      00
+ 1193              	.LASF21:
+ 1194 01a3 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1194      455F4556 
+ 1194      545F4843 
+ 1194      495F5354 
+ 1194      41545553 
+ 1195              	.LASF54:
+ 1196 01b8 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1196      455F4556 
+ 1196      545F4741 
+ 1196      5454435F 
+ 1196      52454144 
+ 1197              	.LASF84:
+ 1198 01d9 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 1198      455F4556 
+ 1198      545F5045 
+ 1198      4E44494E 
+ 1198      475F464C 
+ 1199              	.LASF18:
+ 1200 01f7 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1200      455F4556 
+ 1200      545F5354 
+ 1200      41434B5F 
+ 1200      4F4E00
+ 1201              	.LASF47:
+ 1202 020a 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_LOC_P256_KEYS_GEN_AND_SET_COMPLET"
+ 1202      455F4556 
+ 1202      545F4741 
+ 1202      505F534D 
+ 1202      505F4C4F 
+ 1203 023d 4500     		.ascii	"E\000"
+ 1204              	.LASF51:
+ 1205 023f 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 1205      455F4556 
+ 1205      545F4741 
+ 1205      5454535F 
+ 1205      58434E48 
+ 1206              	.LASF10:
+ 1207 025d 75696E74 		.ascii	"uint16\000"
+ 1207      313600
+ 1208              	.LASF100:
+ 1209 0264 73746172 		.ascii	"startNotification\000"
+ 1209      744E6F74 
+ 1209      69666963 
+ 1209      6174696F 
+ 1209      6E00
+ 1210              	.LASF36:
+ 1211 0276 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 1211      455F4556 
+ 1211      545F4741 
+ 1211      505F4B45 
+ 1211      59494E46 
+ 1212              	.LASF59:
+ 1213 029a 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1213      455F4556 
+ 1213      545F4741 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 29
+
+
+ 1213      5454435F 
+ 1213      52454144 
+ 1214              	.LASF68:
+ 1215 02b9 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 1215      455F4556 
+ 1215      545F4741 
+ 1215      5454535F 
+ 1215      48414E44 
+ 1216              	.LASF17:
+ 1217 02da 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1217      455F4556 
+ 1217      545F484F 
+ 1217      53545F49 
+ 1217      4E56414C 
+ 1218              	.LASF76:
+ 1219 02f1 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1219      455F4556 
+ 1219      545F4C32 
+ 1219      4341505F 
+ 1219      43424643 
+ 1220              	.LASF79:
+ 1221 030f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1221      455F4556 
+ 1221      545F4C32 
+ 1221      4341505F 
+ 1221      43424643 
+ 1222              	.LASF102:
+ 1223 0330 696E6974 		.ascii	"initializeCapSenseBaseline\000"
+ 1223      69616C69 
+ 1223      7A654361 
+ 1223      7053656E 
+ 1223      73654261 
+ 1224              	.LASF57:
+ 1225 034b 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1225      455F4556 
+ 1225      545F4741 
+ 1225      5454435F 
+ 1225      52454144 
+ 1226              	.LASF37:
+ 1227 0364 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 1227      455F4556 
+ 1227      545F4741 
+ 1227      505F4E55 
+ 1227      4D455249 
+ 1228              	.LASF42:
+ 1229 038d 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 1229      455F4556 
+ 1229      545F4741 
+ 1229      50435F44 
+ 1229      49524543 
+ 1230              	.LASF14:
+ 1231 03ae 63796973 		.ascii	"cyisraddress\000"
+ 1231      72616464 
+ 1231      72657373 
+ 1231      00
+ 1232              	.LASF46:
+ 1233 03bb 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ_REPLY_ERR\000"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 30
+
+
+ 1233      455F4556 
+ 1233      545F4741 
+ 1233      505F4155 
+ 1233      54485F52 
+ 1234              	.LASF88:
+ 1235 03dc 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1235      455F4556 
+ 1235      545F4D41 
+ 1235      5800
+ 1236              	.LASF109:
+ 1237 03ea 76546173 		.ascii	"vTaskStartScheduler\000"
+ 1237      6B537461 
+ 1237      72745363 
+ 1237      68656475 
+ 1237      6C657200 
+ 1238              	.LASF4:
+ 1239 03fe 6C6F6E67 		.ascii	"long int\000"
+ 1239      20696E74 
+ 1239      00
+ 1240              	.LASF67:
+ 1241 0407 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1241      455F4556 
+ 1241      545F4741 
+ 1241      5454435F 
+ 1241      48414E44 
+ 1242              	.LASF31:
+ 1243 0428 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 1243      455F4556 
+ 1243      545F4741 
+ 1243      505F4445 
+ 1243      56494345 
+ 1244              	.LASF30:
+ 1245 0447 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1245      455F4556 
+ 1245      545F4741 
+ 1245      50505F41 
+ 1245      44564552 
+ 1246              	.LASF66:
+ 1247 046f 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1247      455F4556 
+ 1247      545F4741 
+ 1247      5454435F 
+ 1247      48414E44 
+ 1248              	.LASF22:
+ 1249 0490 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1249      455F4556 
+ 1249      545F5354 
+ 1249      41434B5F 
+ 1249      42555359 
+ 1250              	.LASF27:
+ 1251 04ac 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1251      455F4556 
+ 1251      545F4741 
+ 1251      505F5041 
+ 1251      53534B45 
+ 1252              	.LASF103:
+ 1253 04d2 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 31
+
+
+ 1253      43313120 
+ 1253      352E342E 
+ 1253      31203230 
+ 1253      31363036 
+ 1254 0505 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1254      20726576 
+ 1254      6973696F 
+ 1254      6E203233 
+ 1254      37373135 
+ 1255 0538 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1255      66756E63 
+ 1255      74696F6E 
+ 1255      2D736563 
+ 1255      74696F6E 
+ 1256              	.LASF77:
+ 1257 0560 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1257      455F4556 
+ 1257      545F4C32 
+ 1257      4341505F 
+ 1257      43424643 
+ 1258              	.LASF41:
+ 1259 057e 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 1259      455F4556 
+ 1259      545F4741 
+ 1259      505F454E 
+ 1259      48414E43 
+ 1260              	.LASF15:
+ 1261 05a2 6C6F6E67 		.ascii	"long double\000"
+ 1261      20646F75 
+ 1261      626C6500 
+ 1262              	.LASF96:
+ 1263 05ae 70726F78 		.ascii	"proxCounter\000"
+ 1263      436F756E 
+ 1263      74657200 
+ 1264              	.LASF73:
+ 1265 05ba 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1265      455F4556 
+ 1265      545F4C32 
+ 1265      4341505F 
+ 1265      434F4E4E 
+ 1266              	.LASF1:
+ 1267 05e0 756E7369 		.ascii	"unsigned char\000"
+ 1267      676E6564 
+ 1267      20636861 
+ 1267      7200
+ 1268              	.LASF63:
+ 1269 05ee 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1269      455F4556 
+ 1269      545F4741 
+ 1269      5454535F 
+ 1269      50524550 
+ 1270              	.LASF85:
+ 1271 060d 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 1271      455F4556 
+ 1271      545F4C45 
+ 1271      5F50494E 
+ 1271      475F4155 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 32
+
+
+ 1272              	.LASF55:
+ 1273 062c 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1273      455F4556 
+ 1273      545F4741 
+ 1273      5454435F 
+ 1273      46494E44 
+ 1274              	.LASF0:
+ 1275 064a 7369676E 		.ascii	"signed char\000"
+ 1275      65642063 
+ 1275      68617200 
+ 1276              	.LASF60:
+ 1277 0656 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1277      455F4556 
+ 1277      545F4741 
+ 1277      5454535F 
+ 1277      57524954 
+ 1278              	.LASF56:
+ 1279 0670 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 1279      455F4556 
+ 1279      545F4741 
+ 1279      5454435F 
+ 1279      46494E44 
+ 1280              	.LASF28:
+ 1281 0697 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1281      455F4556 
+ 1281      545F4741 
+ 1281      505F4155 
+ 1281      54485F43 
+ 1282              	.LASF8:
+ 1283 06b3 756E7369 		.ascii	"unsigned int\000"
+ 1283      676E6564 
+ 1283      20696E74 
+ 1283      00
+ 1284              	.LASF107:
+ 1285 06c0 73657475 		.ascii	"setupFreeRTOS\000"
+ 1285      70467265 
+ 1285      6552544F 
+ 1285      5300
+ 1286              	.LASF49:
+ 1287 06ce 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1287      455F4556 
+ 1287      545F4741 
+ 1287      54545F43 
+ 1287      4F4E4E45 
+ 1288              	.LASF5:
+ 1289 06e9 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1289      20756E73 
+ 1289      69676E65 
+ 1289      6420696E 
+ 1289      7400
+ 1290              	.LASF25:
+ 1291 06fb 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1291      455F4556 
+ 1291      545F4741 
+ 1291      505F4155 
+ 1291      54485F52 
+ 1292              	.LASF91:
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 33
+
+
+ 1293 0712 53564361 		.ascii	"SVCall_IRQn\000"
+ 1293      6C6C5F49 
+ 1293      52516E00 
+ 1294              	.LASF78:
+ 1295 071e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1295      455F4556 
+ 1295      545F4C32 
+ 1295      4341505F 
+ 1295      43424643 
+ 1296              	.LASF33:
+ 1297 073f 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1297      455F4556 
+ 1297      545F4741 
+ 1297      505F454E 
+ 1297      43525950 
+ 1298              	.LASF44:
+ 1299 075c 4359424C 		.ascii	"CYBLE_EVT_GAP_CONN_ESTB\000"
+ 1299      455F4556 
+ 1299      545F4741 
+ 1299      505F434F 
+ 1299      4E4E5F45 
+ 1300              	.LASF72:
+ 1301 0774 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 1301      455F4556 
+ 1301      545F4741 
+ 1301      5454435F 
+ 1301      4C4F4E47 
+ 1302              	.LASF3:
+ 1303 0797 73686F72 		.ascii	"short unsigned int\000"
+ 1303      7420756E 
+ 1303      7369676E 
+ 1303      65642069 
+ 1303      6E7400
+ 1304              	.LASF110:
+ 1305 07aa 496E6974 		.ascii	"InitializeSystem\000"
+ 1305      69616C69 
+ 1305      7A655379 
+ 1305      7374656D 
+ 1305      00
+ 1306              	.LASF97:
+ 1307 07bb 70726F78 		.ascii	"proximityValue\000"
+ 1307      696D6974 
+ 1307      7956616C 
+ 1307      756500
+ 1308              	.LASF34:
+ 1309 07ca 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1309      455F4556 
+ 1309      545F4741 
+ 1309      505F434F 
+ 1309      4E4E4543 
+ 1310              	.LASF43:
+ 1311 07f3 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 1311      455F4556 
+ 1311      545F4741 
+ 1311      505F534D 
+ 1311      505F4E45 
+ 1312              	.LASF13:
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 34
+
+
+ 1313 081a 63686172 		.ascii	"char\000"
+ 1313      00
+ 1314              	.LASF75:
+ 1315 081f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1315      455F4556 
+ 1315      545F4C32 
+ 1315      4341505F 
+ 1315      434F4D4D 
+ 1316              	.LASF9:
+ 1317 083b 75696E74 		.ascii	"uint8\000"
+ 1317      3800
+ 1318              	.LASF108:
+ 1319 0841 78546173 		.ascii	"xTaskCreate\000"
+ 1319      6B437265 
+ 1319      61746500 
+ 1320              	.LASF58:
+ 1321 084d 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 1321      455F4556 
+ 1321      545F4741 
+ 1321      5454435F 
+ 1321      52454144 
+ 1322              	.LASF65:
+ 1323 086b 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1323      455F4556 
+ 1323      545F4741 
+ 1323      5454435F 
+ 1323      45584543 
+ 1324              	.LASF35:
+ 1325 088a 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1325      455F4556 
+ 1325      545F4741 
+ 1325      50435F53 
+ 1325      43414E5F 
+ 1326              	.LASF104:
+ 1327 08a9 6D61696E 		.ascii	"main.c\000"
+ 1327      2E6300
+ 1328              	.LASF81:
+ 1329 08b0 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1329      455F4556 
+ 1329      545F4C32 
+ 1329      4341505F 
+ 1329      43424643 
+ 1330              	.LASF12:
+ 1331 08d3 646F7562 		.ascii	"double\000"
+ 1331      6C6500
+ 1332              	.LASF82:
+ 1333 08da 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 1333      455F4556 
+ 1333      545F4C32 
+ 1333      4341505F 
+ 1333      43424643 
+ 1334              	.LASF89:
+ 1335 08fd 4E6F6E4D 		.ascii	"NonMaskableInt_IRQn\000"
+ 1335      61736B61 
+ 1335      626C6549 
+ 1335      6E745F49 
+ 1335      52516E00 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 35
+
+
+ 1336              	.LASF45:
+ 1337 0911 4359424C 		.ascii	"CYBLE_EVT_GAP_SCAN_REQ_RECVD\000"
+ 1337      455F4556 
+ 1337      545F4741 
+ 1337      505F5343 
+ 1337      414E5F52 
+ 1338              	.LASF6:
+ 1339 092e 6C6F6E67 		.ascii	"long long int\000"
+ 1339      206C6F6E 
+ 1339      6720696E 
+ 1339      7400
+ 1340              	.LASF98:
+ 1341 093c 50726F78 		.ascii	"Proximity_Task\000"
+ 1341      696D6974 
+ 1341      795F5461 
+ 1341      736B00
+ 1342              	.LASF95:
+ 1343 094b 48616E64 		.ascii	"HandleCapSenseProximity\000"
+ 1343      6C654361 
+ 1343      7053656E 
+ 1343      73655072 
+ 1343      6F78696D 
+ 1344              	.LASF20:
+ 1345 0963 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 1345      455F4556 
+ 1345      545F4841 
+ 1345      52445741 
+ 1345      52455F45 
+ 1346              	.LASF80:
+ 1347 097c 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1347      455F4556 
+ 1347      545F4C32 
+ 1347      4341505F 
+ 1347      43424643 
+ 1348              	.LASF74:
+ 1349 099b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 1349      455F4556 
+ 1349      545F4C32 
+ 1349      4341505F 
+ 1349      434F4E4E 
+ 1350              	.LASF24:
+ 1351 09c1 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1351      455F4556 
+ 1351      545F4741 
+ 1351      50435F53 
+ 1351      43414E5F 
+ 1352              	.LASF53:
+ 1353 09e5 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1353      455F4556 
+ 1353      545F4741 
+ 1353      5454435F 
+ 1353      52454144 
+ 1354              	.LASF62:
+ 1355 0a0c 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1355      455F4556 
+ 1355      545F4741 
+ 1355      5454535F 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 36
+
+
+ 1355      57524954 
+ 1356              	.LASF52:
+ 1357 0a2a 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1357      455F4556 
+ 1357      545F4741 
+ 1357      5454435F 
+ 1357      5843484E 
+ 1358              	.LASF83:
+ 1359 0a48 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1359      455F4556 
+ 1359      545F4C32 
+ 1359      4341505F 
+ 1359      43424643 
+ 1360              	.LASF19:
+ 1361 0a6c 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1361      455F4556 
+ 1361      545F5449 
+ 1361      4D454F55 
+ 1361      5400
+ 1362              	.LASF105:
+ 1363 0a7e 443A5C55 		.ascii	"D:\\Users\\Jason\\Documents\\Jason's Work\\Labs\\EC"
+ 1363      73657273 
+ 1363      5C4A6173 
+ 1363      6F6E5C44 
+ 1363      6F63756D 
+ 1364 0aab 45473732 		.ascii	"EG721Project\\PSoCProject\\PSoC_4_BLE_CapSense_Prox"
+ 1364      3150726F 
+ 1364      6A656374 
+ 1364      5C50536F 
+ 1364      4350726F 
+ 1365 0adc 696D6974 		.ascii	"imity.cydsn\000"
+ 1365      792E6379 
+ 1365      64736E00 
+ 1366              	.LASF71:
+ 1367 0ae8 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 1367      455F4556 
+ 1367      545F4741 
+ 1367      5454535F 
+ 1367      52454144 
+ 1368              	.LASF70:
+ 1369 0b11 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 1369      455F4556 
+ 1369      545F4741 
+ 1369      5454435F 
+ 1369      53544F50 
+ 1370              	.LASF64:
+ 1371 0b33 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1371      455F4556 
+ 1371      545F4741 
+ 1371      5454535F 
+ 1371      45584543 
+ 1372              	.LASF92:
+ 1373 0b52 50656E64 		.ascii	"PendSV_IRQn\000"
+ 1373      53565F49 
+ 1373      52516E00 
+ 1374              	.LASF69:
+ 1375 0b5e 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\cczqcRNd.s 			page 37
+
+
+ 1375      455F4556 
+ 1375      545F4741 
+ 1375      5454535F 
+ 1375      44415441 
+ 1376              	.LASF86:
+ 1377 0b82 4359424C 		.ascii	"CYBLE_EVT_HCI_PKT\000"
+ 1377      455F4556 
+ 1377      545F4843 
+ 1377      495F504B 
+ 1377      5400
+ 1378              	.LASF39:
+ 1379 0b94 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1379      455F4556 
+ 1379      545F4741 
+ 1379      505F4F4F 
+ 1379      425F4745 
+ 1380              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

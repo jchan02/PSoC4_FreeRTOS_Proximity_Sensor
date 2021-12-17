@@ -1,0 +1,312 @@
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"croutine.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.comm	x,2,2
+  20              	.Letext0:
+  21              		.file 1 "d:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+  22              		.file 2 "d:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+  23              		.file 3 "./FreeRTOSConfig.h"
+  24              		.section	.debug_info,"",%progbits
+  25              	.Ldebug_info0:
+  26 0000 9A000000 		.4byte	0x9a
+  27 0004 0400     		.2byte	0x4
+  28 0006 00000000 		.4byte	.Ldebug_abbrev0
+  29 000a 04       		.byte	0x4
+  30 000b 01       		.uleb128 0x1
+  31 000c 13010000 		.4byte	.LASF14
+  32 0010 0C       		.byte	0xc
+  33 0011 AA010000 		.4byte	.LASF15
+  34 0015 1B000000 		.4byte	.LASF16
+  35 0019 00000000 		.4byte	.Ldebug_line0
+  36 001d 02       		.uleb128 0x2
+  37 001e 04       		.byte	0x4
+  38 001f 05       		.byte	0x5
+  39 0020 696E7400 		.ascii	"int\000"
+  40 0024 03       		.uleb128 0x3
+  41 0025 04       		.byte	0x4
+  42 0026 07       		.byte	0x7
+  43 0027 0E000000 		.4byte	.LASF0
+  44 002b 03       		.uleb128 0x3
+  45 002c 08       		.byte	0x8
+  46 002d 05       		.byte	0x5
+  47 002e 00000000 		.4byte	.LASF1
+  48 0032 03       		.uleb128 0x3
+  49 0033 08       		.byte	0x8
+  50 0034 04       		.byte	0x4
+  51 0035 FD000000 		.4byte	.LASF2
+  52 0039 03       		.uleb128 0x3
+  53 003a 01       		.byte	0x1
+  54 003b 06       		.byte	0x6
+  55 003c E8000000 		.4byte	.LASF3
+  56 0040 03       		.uleb128 0x3
+  57 0041 01       		.byte	0x1
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 2
+
+
+  58 0042 08       		.byte	0x8
+  59 0043 B9000000 		.4byte	.LASF4
+  60 0047 03       		.uleb128 0x3
+  61 0048 02       		.byte	0x2
+  62 0049 05       		.byte	0x5
+  63 004a 09010000 		.4byte	.LASF5
+  64 004e 04       		.uleb128 0x4
+  65 004f AE000000 		.4byte	.LASF10
+  66 0053 01       		.byte	0x1
+  67 0054 2B       		.byte	0x2b
+  68 0055 59000000 		.4byte	0x59
+  69 0059 03       		.uleb128 0x3
+  70 005a 02       		.byte	0x2
+  71 005b 07       		.byte	0x7
+  72 005c D5000000 		.4byte	.LASF6
+  73 0060 03       		.uleb128 0x3
+  74 0061 04       		.byte	0x4
+  75 0062 05       		.byte	0x5
+  76 0063 CC000000 		.4byte	.LASF7
+  77 0067 03       		.uleb128 0x3
+  78 0068 04       		.byte	0x4
+  79 0069 07       		.byte	0x7
+  80 006a 85000000 		.4byte	.LASF8
+  81 006e 03       		.uleb128 0x3
+  82 006f 08       		.byte	0x8
+  83 0070 07       		.byte	0x7
+  84 0071 97000000 		.4byte	.LASF9
+  85 0075 04       		.uleb128 0x4
+  86 0076 F4000000 		.4byte	.LASF11
+  87 007a 02       		.byte	0x2
+  88 007b 24       		.byte	0x24
+  89 007c 4E000000 		.4byte	0x4e
+  90 0080 03       		.uleb128 0x3
+  91 0081 04       		.byte	0x4
+  92 0082 07       		.byte	0x7
+  93 0083 A1010000 		.4byte	.LASF12
+  94 0087 03       		.uleb128 0x3
+  95 0088 01       		.byte	0x1
+  96 0089 08       		.byte	0x8
+  97 008a C7000000 		.4byte	.LASF13
+  98 008e 05       		.uleb128 0x5
+  99 008f 7800     		.ascii	"x\000"
+ 100 0091 03       		.byte	0x3
+ 101 0092 04       		.byte	0x4
+ 102 0093 75000000 		.4byte	0x75
+ 103 0097 05       		.uleb128 0x5
+ 104 0098 03       		.byte	0x3
+ 105 0099 00000000 		.4byte	x
+ 106 009d 00       		.byte	0
+ 107              		.section	.debug_abbrev,"",%progbits
+ 108              	.Ldebug_abbrev0:
+ 109 0000 01       		.uleb128 0x1
+ 110 0001 11       		.uleb128 0x11
+ 111 0002 01       		.byte	0x1
+ 112 0003 25       		.uleb128 0x25
+ 113 0004 0E       		.uleb128 0xe
+ 114 0005 13       		.uleb128 0x13
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 3
+
+
+ 115 0006 0B       		.uleb128 0xb
+ 116 0007 03       		.uleb128 0x3
+ 117 0008 0E       		.uleb128 0xe
+ 118 0009 1B       		.uleb128 0x1b
+ 119 000a 0E       		.uleb128 0xe
+ 120 000b 10       		.uleb128 0x10
+ 121 000c 17       		.uleb128 0x17
+ 122 000d 00       		.byte	0
+ 123 000e 00       		.byte	0
+ 124 000f 02       		.uleb128 0x2
+ 125 0010 24       		.uleb128 0x24
+ 126 0011 00       		.byte	0
+ 127 0012 0B       		.uleb128 0xb
+ 128 0013 0B       		.uleb128 0xb
+ 129 0014 3E       		.uleb128 0x3e
+ 130 0015 0B       		.uleb128 0xb
+ 131 0016 03       		.uleb128 0x3
+ 132 0017 08       		.uleb128 0x8
+ 133 0018 00       		.byte	0
+ 134 0019 00       		.byte	0
+ 135 001a 03       		.uleb128 0x3
+ 136 001b 24       		.uleb128 0x24
+ 137 001c 00       		.byte	0
+ 138 001d 0B       		.uleb128 0xb
+ 139 001e 0B       		.uleb128 0xb
+ 140 001f 3E       		.uleb128 0x3e
+ 141 0020 0B       		.uleb128 0xb
+ 142 0021 03       		.uleb128 0x3
+ 143 0022 0E       		.uleb128 0xe
+ 144 0023 00       		.byte	0
+ 145 0024 00       		.byte	0
+ 146 0025 04       		.uleb128 0x4
+ 147 0026 16       		.uleb128 0x16
+ 148 0027 00       		.byte	0
+ 149 0028 03       		.uleb128 0x3
+ 150 0029 0E       		.uleb128 0xe
+ 151 002a 3A       		.uleb128 0x3a
+ 152 002b 0B       		.uleb128 0xb
+ 153 002c 3B       		.uleb128 0x3b
+ 154 002d 0B       		.uleb128 0xb
+ 155 002e 49       		.uleb128 0x49
+ 156 002f 13       		.uleb128 0x13
+ 157 0030 00       		.byte	0
+ 158 0031 00       		.byte	0
+ 159 0032 05       		.uleb128 0x5
+ 160 0033 34       		.uleb128 0x34
+ 161 0034 00       		.byte	0
+ 162 0035 03       		.uleb128 0x3
+ 163 0036 08       		.uleb128 0x8
+ 164 0037 3A       		.uleb128 0x3a
+ 165 0038 0B       		.uleb128 0xb
+ 166 0039 3B       		.uleb128 0x3b
+ 167 003a 0B       		.uleb128 0xb
+ 168 003b 49       		.uleb128 0x49
+ 169 003c 13       		.uleb128 0x13
+ 170 003d 3F       		.uleb128 0x3f
+ 171 003e 19       		.uleb128 0x19
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 4
+
+
+ 172 003f 02       		.uleb128 0x2
+ 173 0040 18       		.uleb128 0x18
+ 174 0041 00       		.byte	0
+ 175 0042 00       		.byte	0
+ 176 0043 00       		.byte	0
+ 177              		.section	.debug_aranges,"",%progbits
+ 178 0000 14000000 		.4byte	0x14
+ 179 0004 0200     		.2byte	0x2
+ 180 0006 00000000 		.4byte	.Ldebug_info0
+ 181 000a 04       		.byte	0x4
+ 182 000b 00       		.byte	0
+ 183 000c 0000     		.2byte	0
+ 184 000e 0000     		.2byte	0
+ 185 0010 00000000 		.4byte	0
+ 186 0014 00000000 		.4byte	0
+ 187              		.section	.debug_line,"",%progbits
+ 188              	.Ldebug_line0:
+ 189 0000 2C010000 		.section	.debug_str,"MS",%progbits,1
+ 189      02002601 
+ 189      00000201 
+ 189      FB0E0D00 
+ 189      01010101 
+ 190              	.LASF1:
+ 191 0000 6C6F6E67 		.ascii	"long long int\000"
+ 191      206C6F6E 
+ 191      6720696E 
+ 191      7400
+ 192              	.LASF0:
+ 193 000e 756E7369 		.ascii	"unsigned int\000"
+ 193      676E6564 
+ 193      20696E74 
+ 193      00
+ 194              	.LASF16:
+ 195 001b 443A5C55 		.ascii	"D:\\Users\\Jason\\Documents\\Jason's Work\\Labs\\EC"
+ 195      73657273 
+ 195      5C4A6173 
+ 195      6F6E5C44 
+ 195      6F63756D 
+ 196 0048 45473732 		.ascii	"EG721Project\\PSoCProject\\PSoC_4_BLE_CapSense_Prox"
+ 196      3150726F 
+ 196      6A656374 
+ 196      5C50536F 
+ 196      4350726F 
+ 197 0079 696D6974 		.ascii	"imity.cydsn\000"
+ 197      792E6379 
+ 197      64736E00 
+ 198              	.LASF8:
+ 199 0085 6C6F6E67 		.ascii	"long unsigned int\000"
+ 199      20756E73 
+ 199      69676E65 
+ 199      6420696E 
+ 199      7400
+ 200              	.LASF9:
+ 201 0097 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 201      206C6F6E 
+ 201      6720756E 
+ 201      7369676E 
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 5
+
+
+ 201      65642069 
+ 202              	.LASF10:
+ 203 00ae 5F5F7569 		.ascii	"__uint16_t\000"
+ 203      6E743136 
+ 203      5F7400
+ 204              	.LASF4:
+ 205 00b9 756E7369 		.ascii	"unsigned char\000"
+ 205      676E6564 
+ 205      20636861 
+ 205      7200
+ 206              	.LASF13:
+ 207 00c7 63686172 		.ascii	"char\000"
+ 207      00
+ 208              	.LASF7:
+ 209 00cc 6C6F6E67 		.ascii	"long int\000"
+ 209      20696E74 
+ 209      00
+ 210              	.LASF6:
+ 211 00d5 73686F72 		.ascii	"short unsigned int\000"
+ 211      7420756E 
+ 211      7369676E 
+ 211      65642069 
+ 211      6E7400
+ 212              	.LASF3:
+ 213 00e8 7369676E 		.ascii	"signed char\000"
+ 213      65642063 
+ 213      68617200 
+ 214              	.LASF11:
+ 215 00f4 75696E74 		.ascii	"uint16_t\000"
+ 215      31365F74 
+ 215      00
+ 216              	.LASF2:
+ 217 00fd 6C6F6E67 		.ascii	"long double\000"
+ 217      20646F75 
+ 217      626C6500 
+ 218              	.LASF5:
+ 219 0109 73686F72 		.ascii	"short int\000"
+ 219      7420696E 
+ 219      7400
+ 220              	.LASF14:
+ 221 0113 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 221      43313120 
+ 221      352E342E 
+ 221      31203230 
+ 221      31363036 
+ 222 0146 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 222      20726576 
+ 222      6973696F 
+ 222      6E203233 
+ 222      37373135 
+ 223 0179 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 223      66756E63 
+ 223      74696F6E 
+ 223      2D736563 
+ 223      74696F6E 
+ 224              	.LASF12:
+ 225 01a1 73697A65 		.ascii	"sizetype\000"
+ARM GAS  C:\Users\Jason\AppData\Local\Temp\ccaVGZ2d.s 			page 6
+
+
+ 225      74797065 
+ 225      00
+ 226              	.LASF15:
+ 227 01aa 2E2E5C46 		.ascii	"..\\FreeRTOS\\Source\\croutine.c\000"
+ 227      72656552 
+ 227      544F535C 
+ 227      536F7572 
+ 227      63655C63 
+ 228              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
